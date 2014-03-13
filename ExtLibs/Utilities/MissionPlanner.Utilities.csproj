@@ -31,33 +31,31 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="AWSSDK, Version=1.5.18.0, Culture=neutral, PublicKeyToken=9f476d3089b52be3, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Lib\AWSSDK.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="AWSSDK">
+      <HintPath>..\..\..\..\..\..\..\..\Program Files (x86)\Mission Planner\AWSSDK.dll</HintPath>
     </Reference>
     <Reference Include="DirectShowLib-2005">
-      <HintPath>..\..\..\..\..\..\Program Files (x86)\Mission Planner\DirectShowLib-2005.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\..\..\Program Files (x86)\Mission Planner\DirectShowLib-2005.dll</HintPath>
     </Reference>
-    <Reference Include="GMap.NET.Core, Version=1.7.0.0, Culture=neutral, PublicKeyToken=b85b9027b614afef, processorArchitecture=MSIL">
+    <Reference Include="GMap.NET.Core, Version=1.6.0.0, Culture=neutral, PublicKeyToken=b85b9027b614afef, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Lib\GMap.NET.Core.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\..\..\Program Files (x86)\Mission Planner\GMap.NET.Core.dll</HintPath>
     </Reference>
-    <Reference Include="GMap.NET.WindowsForms, Version=1.7.0.0, Culture=neutral, PublicKeyToken=b85b9027b614afef, processorArchitecture=MSIL">
+    <Reference Include="GMap.NET.WindowsForms, Version=1.6.0.0, Culture=neutral, PublicKeyToken=b85b9027b614afef, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Lib\GMap.NET.WindowsForms.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\..\..\Program Files (x86)\Mission Planner\GMap.NET.WindowsForms.dll</HintPath>
     </Reference>
     <Reference Include="ICSharpCode.SharpZipLib">
-      <HintPath>..\..\..\..\..\..\Program Files (x86)\Mission Planner\ICSharpCode.SharpZipLib.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\..\..\Program Files (x86)\Mission Planner\ICSharpCode.SharpZipLib.dll</HintPath>
     </Reference>
     <Reference Include="log4net">
-      <HintPath>..\..\..\..\..\..\Program Files (x86)\Mission Planner\log4net.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\..\..\Program Files (x86)\Mission Planner\log4net.dll</HintPath>
     </Reference>
     <Reference Include="OpenTK">
-      <HintPath>..\..\..\..\..\..\Program Files (x86)\Mission Planner\OpenTK.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\..\..\Program Files (x86)\Mission Planner\OpenTK.dll</HintPath>
     </Reference>
     <Reference Include="ProjNet">
-      <HintPath>..\..\..\..\..\..\Program Files (x86)\Mission Planner\ProjNet.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\..\..\Program Files (x86)\Mission Planner\ProjNet.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
