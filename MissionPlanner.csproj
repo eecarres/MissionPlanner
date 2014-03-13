@@ -257,6 +257,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AcercaDeHemav.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AcercaDeHemav.Designer.cs">
+      <DependentUpon>AcercaDeHemav.cs</DependentUpon>
+    </Compile>
     <Compile Include="Antenna\ArduTracker.cs" />
     <Compile Include="Antenna\DegreeTracker.cs" />
     <Compile Include="Antenna\ITrackerOutput.cs" />
@@ -480,6 +486,9 @@
     <Compile Include="Utilities\ParameterMetaDataRepositoryAutoTest.cs" />
     <Compile Include="Utilities\Firmware.cs" />
     <Compile Include="Utilities\ImageOverFilter.cs" />
+    <EmbeddedResource Include="AcercaDeHemav.resx">
+      <DependentUpon>AcercaDeHemav.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigAP_Limits.zh-Hans.resx">
       <DependentUpon>ConfigAP_Limits.cs</DependentUpon>
     </EmbeddedResource>
@@ -2373,6 +2382,8 @@
     <None Include="Resources\marker_05.png" />
     <None Include="Resources\marker_06.png" />
     <None Include="Resources\marker_07.png" />
+    <None Include="Resources\HemavLogo.png" />
+    <None Include="Resources\HemavButton.png" />
     <Content Include="Resources\MAVCmd.zh-TW.txt" />
     <Content Include="Resources\MAVParam.zh-TW.txt" />
     <Content Include="Resources\new frames-01.png" />

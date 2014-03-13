@@ -2472,5 +2472,12 @@ namespace MissionPlanner
             //MainMenu.BackColor = Color.Black;
             //MainMenu.BackgroundImage = MissionPlanner.Properties.Resources.bgdark;
         }
+
+        private void toolStripMenuItem1_Click_1(object sender, EventArgs e)
+        {
+            AcercaDeHemav ventantaAcercaDeHemav=new AcercaDeHemav();
+            ventantaAcercaDeHemav.Show();
+
+        }
     }
 }

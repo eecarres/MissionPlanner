@@ -34,25 +34,19 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="AStar">
-      <HintPath>..\..\Lib\AStar.dll</HintPath>
-      <Private>False</Private>
+      <HintPath>..\AStar.dll</HintPath>
     </Reference>
     <Reference Include="GMap.NET.Core">
-      <HintPath>..\..\Lib\GMap.NET.Core.dll</HintPath>
-      <Private>False</Private>
+      <HintPath>..\..\..\..\..\..\..\..\Program Files (x86)\Mission Planner\GMap.NET.Core.dll</HintPath>
     </Reference>
     <Reference Include="GMap.NET.WindowsForms">
-      <HintPath>..\..\Lib\GMap.NET.WindowsForms.dll</HintPath>
-      <Private>False</Private>
+      <HintPath>..\..\..\..\..\..\..\..\Program Files (x86)\Mission Planner\GMap.NET.WindowsForms.dll</HintPath>
     </Reference>
-    <Reference Include="log4net, Version=1.2.11.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Lib\log4net.dll</HintPath>
-      <Private>False</Private>
+    <Reference Include="log4net">
+      <HintPath>..\..\..\..\..\..\..\..\Program Files (x86)\Mission Planner\log4net.dll</HintPath>
     </Reference>
     <Reference Include="ProjNet">
-      <HintPath>..\..\Lib\ProjNet.dll</HintPath>
-      <Private>False</Private>
+      <HintPath>..\..\..\..\..\..\..\..\Program Files (x86)\Mission Planner\ProjNet.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />

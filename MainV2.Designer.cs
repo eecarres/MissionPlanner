@@ -43,6 +43,7 @@ namespace MissionPlanner
             this.MenuSimulation = new System.Windows.Forms.ToolStripButton();
             this.MenuTerminal = new System.Windows.Forms.ToolStripButton();
             this.MenuHelp = new System.Windows.Forms.ToolStripButton();
+            this.MenuHemav = new System.Windows.Forms.ToolStripMenuItem();
             this.MenuConnect = new System.Windows.Forms.ToolStripButton();
             this.toolStripConnectionControl = new MissionPlanner.Controls.ToolStripConnectionControl();
             this.MenuDonate = new System.Windows.Forms.ToolStripMenuItem();
@@ -67,6 +68,7 @@ namespace MissionPlanner
             this.MenuSimulation,
             this.MenuTerminal,
             this.MenuHelp,
+            this.MenuHemav,
             this.MenuConnect,
             this.toolStripConnectionControl,
             this.MenuDonate});
@@ -151,6 +153,17 @@ namespace MissionPlanner
             this.MenuHelp.Name = "MenuHelp";
             this.MenuHelp.Padding = new System.Windows.Forms.Padding(0, 0, 10, 0);
             this.MenuHelp.Click += new System.EventHandler(this.MenuHelp_Click);
+            // 
+            // MenuHemav
+            // 
+            this.MenuHemav.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            resources.ApplyResources(this.MenuHemav, "MenuHemav");
+            this.MenuHemav.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.MenuHemav.ForeColor = System.Drawing.Color.White;
+            this.MenuHemav.Image = global::MissionPlanner.Properties.Resources.HemavButton;
+            this.MenuHemav.Name = "MenuHemav";
+            this.MenuHemav.Padding = new System.Windows.Forms.Padding(0);
+            this.MenuHemav.Click += new System.EventHandler(this.toolStripMenuItem1_Click_1);
             // 
             // MenuConnect
             // 
@@ -237,5 +250,6 @@ namespace MissionPlanner
         private System.Windows.Forms.ToolStripMenuItem autoHideToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem MenuDonate;
         public System.Windows.Forms.MenuStrip MainMenu;
+        private System.Windows.Forms.ToolStripMenuItem MenuHemav;
     }
 }
