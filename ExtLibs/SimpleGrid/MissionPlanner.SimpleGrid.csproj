@@ -64,12 +64,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="GridUI.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="GridUI.Designer.cs">
-      <DependentUpon>GridUI.cs</DependentUpon>
-    </Compile>
     <Compile Include="SimpleGrid.cs" />
     <Compile Include="SimpleGridUI.cs">
       <SubType>Form</SubType>
@@ -118,9 +112,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="GridUI.resx">
-      <DependentUpon>GridUI.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="SimpleGridUI.resx">
       <DependentUpon>SimpleGridUI.cs</DependentUpon>
     </EmbeddedResource>
