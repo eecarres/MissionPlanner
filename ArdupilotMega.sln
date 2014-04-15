@@ -50,7 +50,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MissionPlanner.Controls", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MissionPlanner.Comms", "ExtLibs\Comms\MissionPlanner.Comms.csproj", "{825E7A10-390C-4A2B-B3A8-491D14966912}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PluginTest", "Plugins\PluginTest.csproj", "{9EB725D8-B6C2-4BB3-9937-8881BC35DAC8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartGridPlugin", "Plugins\SmartGridPlugin.csproj", "{9EB725D8-B6C2-4BB3-9937-8881BC35DAC8}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MissionPlanner.Utilities", "ExtLibs\Utilities\MissionPlanner.Utilities.csproj", "{1378A66C-38E4-46F5-A05F-DC04EF7D4D16}"
 EndProject

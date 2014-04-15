@@ -2502,5 +2502,11 @@ namespace MissionPlanner
                 this.WindowState = FormWindowState.Maximized;
             }
         }
+
+        private void toolStripButton1_Click(object sender, EventArgs e)
+        {
+            AcercaDe Form = new AcercaDe();
+            Form.ShowDialog();
+        }
     }
 }
