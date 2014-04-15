@@ -2485,11 +2485,22 @@ namespace MissionPlanner
             //MainMenu.BackgroundImage = MissionPlanner.Properties.Resources.bgdark;
         }
 
-        private void toolStripMenuItem1_Click_1(object sender, EventArgs e)
+        private void fullScreenToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            AcercaDeHemav ventantaAcercaDeHemav=new AcercaDeHemav();
-            ventantaAcercaDeHemav.Show();
-
+            // full screen
+            if (fullScreenToolStripMenuItem.Checked)
+            {
+                this.TopMost = true;
+                this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
+                this.WindowState = FormWindowState.Normal;
+                this.WindowState = FormWindowState.Maximized;
+            }
+            else
+            {
+                this.TopMost = false;
+                this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+                this.WindowState = FormWindowState.Maximized;
+            }
         }
     }
 }
