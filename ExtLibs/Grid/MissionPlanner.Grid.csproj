@@ -108,6 +108,7 @@
   <ItemGroup>
     <EmbeddedResource Include="GridUI.resx">
       <DependentUpon>GridUI.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

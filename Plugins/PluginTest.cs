@@ -21,10 +21,10 @@ using System.Windows.Forms;
 
         public override bool Loaded() 
         {
-            ToolStripLabel item = new ToolStripLabel("Test Plugin");
+            ToolStripLabel item = new ToolStripLabel("Puta mierda");
             item.Click += item_Click;
 
-            Host.FDMenuMap.Items.Add(item);
+            Host.FPMenuMap.Items.Add(item);
 
             return true; 
         }
