@@ -67,7 +67,7 @@ namespace MissionPlanner
         {
             if (Host.FPDrawnPolygon != null && Host.FPDrawnPolygon.Points.Count > 2)
             {
-                Form gridui = new GridUI(this);
+                Form gridui = new GridUI(this,Host.FPDrawnPolygon);
                 MissionPlanner.Utilities.ThemeManager.ApplyThemeTo(gridui);
                 gridui.ShowDialog();
             }

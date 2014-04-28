@@ -46,7 +46,7 @@ namespace MissionPlanner
             public float imageheight;
         }
 
-        public GridUI(GridPlugin plugin)
+        public GridUI(GridPlugin plugin, GMapPolygon poligono)
         {
             this.plugin = plugin;
 
@@ -62,7 +62,7 @@ namespace MissionPlanner
 
             // set and angle that is good
             List<PointLatLngAlt> list = new List<PointLatLngAlt>();
-            plugin.Host.FPDrawnPolygon.Points.ForEach(x => { list.Add(x); });
+            poligono.Points.ForEach(x => { list.Add(x); });
             NUM_angle.Value = (decimal)((getAngleOfLongestSide(list) + 360) % 360);
 
         }

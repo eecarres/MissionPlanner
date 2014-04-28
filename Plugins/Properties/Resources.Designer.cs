@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace PluginTest.Properties {
+namespace SmartGridPlugin.Properties {
     using System;
     
     
