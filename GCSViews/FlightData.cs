@@ -102,8 +102,6 @@ namespace MissionPlanner.GCSViews
 
         //The file path of the selected script
         string selectedscript = "";
-        //the text of the file loaded from the path
-        string scripttext = "";
         //the thread the script is running on
         Thread scriptthread = null;
         //whether or not a script is running
@@ -279,6 +277,11 @@ namespace MissionPlanner.GCSViews
             catch { }
 
             MainV2.comPort.ParamListChanged += FlightData_ParentChanged;
+
+            MainV2.AdvancedChanged += MainV2_AdvancedChanged;
+
+            // first run
+            MainV2_AdvancedChanged(null, null);
         }
    
         void tabStatus_Resize(object sender, EventArgs e)
@@ -386,6 +389,35 @@ namespace MissionPlanner.GCSViews
             ThemeManager.ApplyThemeTo(tabStatus);
 
             //   tabStatus.ResumeLayout();
+        }
+
+        private void MainV2_AdvancedChanged(object sender, EventArgs e)
+        {
+            if (!MainV2.Advanced)
+            {
+                if (!tabControlactions.TabPages.Contains(tabActionsSimple))
+                    tabControlactions.TabPages.Add(tabActionsSimple);
+                tabControlactions.TabPages.Remove(tabGauges);
+                tabControlactions.TabPages.Remove(tabActions);
+                tabControlactions.TabPages.Remove(tabStatus);
+                tabControlactions.TabPages.Remove(tabServo);
+                tabControlactions.TabPages.Remove(tabScripts);
+
+                tabControlactions.Invalidate();
+            }
+            else
+            {
+                tabControlactions.TabPages.Remove(tabGauges);
+                tabControlactions.TabPages.Remove(tabActionsSimple);
+                if (!tabControlactions.TabPages.Contains(tabActions))
+                    tabControlactions.TabPages.Add(tabActions);
+                if (!tabControlactions.TabPages.Contains(tabStatus))
+                    tabControlactions.TabPages.Add(tabStatus);
+                if (!tabControlactions.TabPages.Contains(tabServo))
+                    tabControlactions.TabPages.Add(tabServo);
+                if (!tabControlactions.TabPages.Contains(tabScripts))
+                    tabControlactions.TabPages.Add(tabScripts);
+            }
         }
 
         public void Activate()
@@ -1022,13 +1054,19 @@ namespace MissionPlanner.GCSViews
 
                             lock(MainV2.instance.adsbPlanes) 
                             {
-                                //routes.Markers.ForEach(x => { if (x.ToolTipText.ToString().Contains("ICAO")) routes.Markers.Remove(x); });
+                                for (int a = (routes.Markers.Count-1); a >= 0; a--)
+                                {
+                                    if (routes.Markers[a].ToolTipText != null && routes.Markers[a].ToolTipText.ToString().Contains("ICAO"))
+                                    {
+                                        routes.Markers.RemoveAt(a);
+                                    }
+                                }
 
                                 foreach (MissionPlanner.Utilities.adsb.PointLatLngAltHdg plla in MainV2.instance.adsbPlanes.Values)
                                 {
                                     // 30 seconds
                                     if (((DateTime)MainV2.instance.adsbPlaneAge[plla.Tag]) > DateTime.Now.AddSeconds(-30))
-                                        routes.Markers.Add(new GMapMarkerADSBPlane(plla,plla.Heading) { ToolTipText = "ICAO: " + plla.Tag, ToolTipMode = MarkerTooltipMode.OnMouseOver });
+                                        routes.Markers.Add(new GMapMarkerADSBPlane(plla,plla.Heading) { ToolTipText = "ICAO: " + plla.Tag + " " + plla.Alt.ToString("0"), ToolTipMode = MarkerTooltipMode.OnMouseOver });
                                 }
                             }
 
@@ -1861,6 +1899,15 @@ namespace MissionPlanner.GCSViews
                     CMB_setwp.Items.Add(z.ToString());
                 }
             }
+
+            if (MainV2.comPort.MAV.param["MIS_TOTAL"] != null)
+            {
+                int wps = int.Parse(MainV2.comPort.MAV.param["MIS_TOTAL"].ToString());
+                for (int z = 1; z <= wps; z++)
+                {
+                    CMB_setwp.Items.Add(z.ToString());
+                }
+            }
         }
 
         private void BUT_quickauto_Click(object sender, EventArgs e)
@@ -2456,115 +2503,6 @@ namespace MissionPlanner.GCSViews
 
         }
 
-        private void BUT_script_Click(object sender, EventArgs e)
-        {
-
-            System.Threading.Thread t11 = new System.Threading.Thread(new System.Threading.ThreadStart(ScriptStart))
-            {
-                IsBackground = true,
-                Name = "Script Thread"
-            };
-            t11.Start();
-        }
-
-        void ScriptStart()
-        {
-            string myscript = @"
-# cs.???? = currentstate, any variable on the status tab in the planner can be used.
-# Script = options are 
-# Script.Sleep(ms)
-# Script.ChangeParam(name,value)
-# Script.GetParam(name)
-# Script.ChangeMode(mode) - same as displayed in mode setup screen 'AUTO'
-# Script.WaitFor(string,timeout)
-# Script.SendRC(channel,pwm,sendnow)
-# 
-
-import sys
-sys.path.append('c:\python27\lib')
-
-print 'Start Script'
-for chan in range(1,9):
-    Script.SendRC(chan,1500,False)
-Script.SendRC(3,Script.GetParam('RC3_MIN'),True)
-
-Script.Sleep(5000)
-while cs.lat == 0:
-    print 'Waiting for GPS'
-    Script.Sleep(1000)
-print 'Got GPS'
-jo = 10 * 13
-print jo
-Script.SendRC(3,1000,False)
-Script.SendRC(4,2000,True)
-cs.messages.Clear()
-Script.WaitFor('ARMING MOTORS',30000)
-Script.SendRC(4,1500,True)
-print 'Motors Armed!'
-
-Script.SendRC(3,1700,True)
-while cs.alt < 50:
-    Script.Sleep(50)
-
-Script.SendRC(5,2000,True) # acro
-
-Script.SendRC(1,2000,False) # roll
-Script.SendRC(3,1370,True) # throttle
-while cs.roll > -45: # top hald 0 - 180
-    Script.Sleep(5)
-while cs.roll < -45: # -180 - -45
-    Script.Sleep(5)
-
-Script.SendRC(5,1500,False) # stabalise
-Script.SendRC(1,1500,True) # level roll
-Script.Sleep(2000) # 2 sec to stabalise
-Script.SendRC(3,1300,True) # throttle back to land
-
-thro = 1350 # will decend
-
-while cs.alt > 0.1:
-    Script.Sleep(300)
-
-Script.SendRC(3,1000,False)
-Script.SendRC(4,1000,True)
-Script.WaitFor('DISARMING MOTORS',30000)
-Script.SendRC(4,1500,True)
-
-print 'Roll complete'
-
-";
-
-            //  CustomMessageBox.Show("This is Very ALPHA");
-
-            Form scriptedit = new Form();
-
-            scriptedit.Size = new System.Drawing.Size(500, 500);
-
-            TextBox tb = new TextBox();
-
-            tb.Dock = DockStyle.Fill;
-
-            tb.ScrollBars = ScrollBars.Both;
-            tb.Multiline = true;
-
-            tb.Location = new Point(0, 0);
-            tb.Size = new System.Drawing.Size(scriptedit.Size.Width - 30, scriptedit.Size.Height - 30);
-
-            scriptedit.Controls.Add(tb);
-
-            tb.Text = myscript;
-
-            scriptedit.ShowDialog();
-
-            if (DialogResult.Yes == CustomMessageBox.Show("Run Script", "Run this script?", MessageBoxButtons.YesNo))
-            {
-
-                Script scr = new Script();
-
-                scr.runScript(tb.Text);
-            }
-        }
-
         private void CHK_autopan_CheckedChanged(object sender, EventArgs e)
         {
             MainV2.config["CHK_autopan"] = CHK_autopan.Checked.ToString();
@@ -2928,50 +2866,51 @@ print 'Roll complete'
                 BUT_run_script.Visible = BUT_edit_selected.Visible = true;
                 labelSelectedScript.Text = "Selected Script: " + selectedscript;
             }
+            else
+            {
+                selectedscript = "";
+            }
         }
 
         private void BUT_run_script_Click(object sender, EventArgs e)
         {
-            try
+            if (File.Exists(selectedscript))
             {
-                scripttext = File.ReadAllText(selectedscript);
+                scriptthread = new System.Threading.Thread(new System.Threading.ThreadStart(run_selected_script))
+                {
+                    IsBackground = true,
+                    Name = "Script Thread (new)"
+                };
+                labelScriptStatus.Text = "Script Status: Running";
+
+                script = null;
+                outputwindowstarted = false;
+
+                scriptthread.Start();
+                scriptrunning = true;
+                BUT_run_script.Enabled = false;
+                BUT_select_script.Enabled = false;
+                BUT_abort_script.Visible = true;
+                BUT_edit_selected.Enabled = false;
+                scriptChecker.Enabled = true;
+                checkBoxRedirectOutput.Enabled = false;
+
+                while (script == null)
+                {
+                }
+
+                scriptChecker_Tick(null, null);
             }
-            catch (Exception ex)
+            else
             {
-                MessageBox.Show("Failed to open script file due to exception: " + ex.Message);
-                return;
+                CustomMessageBox.Show("Please select a valid script","Bad Script");
             }
-
-            scriptthread = new System.Threading.Thread(new System.Threading.ThreadStart(run_selected_script))
-            {
-                IsBackground = true,
-                Name = "Script Thread (new)"
-            };
-            labelScriptStatus.Text = "Script Status: Running";
-
-            script = null;
-            outputwindowstarted = false;
-
-            scriptthread.Start();
-            scriptrunning = true;
-            BUT_run_script.Enabled = false;
-            BUT_select_script.Enabled = false;
-            BUT_abort_script.Visible = true;
-            BUT_edit_selected.Enabled = false;
-            scriptChecker.Enabled = true;
-            checkBoxRedirectOutput.Enabled = false;
-
-            while (script == null)
-            {
-            }
-
-            scriptChecker_Tick(null, null);
         }
 
         void run_selected_script()
         {
             script = new Script(checkBoxRedirectOutput.Checked);
-            script.runScript(scripttext);
+            script.runScript(selectedscript);
             scriptrunning = false;
         }
 
@@ -3051,7 +2990,7 @@ print 'Roll complete'
 
             if (File.Exists(ofd.FileName))
             {
-                List<string> log = BinaryLog.ReadLog(ofd.FileName);
+                var log = BinaryLog.ReadLog(ofd.FileName);
 
                 SaveFileDialog sfd = new SaveFileDialog();
                 sfd.Filter = "log|*.log";
@@ -3140,6 +3079,36 @@ print 'Roll complete'
                 txt_messagebox.Text = message.ToString();
 
                 messagecount = MainV2.comPort.MAV.cs.messages.Count;
+            }
+        }
+
+        private void dropOutToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void BUT_loganalysis_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog ofd = new OpenFileDialog();
+            ofd.Filter = "*.log|*.log";
+            ofd.ShowDialog();
+
+            if (ofd.FileName != "")
+            {
+                string xmlfile = MissionPlanner.Utilities.LogAnalyzer.CheckLogFile(ofd.FileName);
+
+                if (File.Exists(xmlfile))
+                {
+                    var out1 = MissionPlanner.Utilities.LogAnalyzer.Results(xmlfile);
+
+                    MissionPlanner.Controls.LogAnalyzer frm = new Controls.LogAnalyzer(out1);
+
+                    frm.Show();
+                }
+                else
+                {
+                    CustomMessageBox.Show("Bad input file");
+                }
             }
         }
     }

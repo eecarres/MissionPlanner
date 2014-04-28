@@ -70,23 +70,18 @@ namespace MissionPlanner
 
         public static List<PointLatLngAlt> CreateGrid(List<PointLatLngAlt> polygon, double altitude, double distance, double spacing, double angle, double overshoot1,double overshoot2, StartPosition startpos, bool shutter)
         {
-            // Ajusta el espaciado si es demasiado grande o si no existe
             if (spacing < 10 && spacing != 0)
                 spacing = 10;
 
-            // Creamos la lista de puntos que se devolveran como Grid
+            if (polygon.Count == 0)
+                return new List<PointLatLngAlt>();
+
             List<PointLatLngAlt> ans = new List<PointLatLngAlt>();
 
-            //Sacamos la zona utm del primer punto del polígono
             int utmzone = polygon[0].GetUTMZone();
 
-            // Creamos una lista de posiciones utmpos() que incluirá los puntos del polígono en formato utmpos,
-            //a partir de los puntos del polígono y la posicion utm del primer punto del mismo
-
-            
             List<utmpos> utmpositions = utmpos.ToList(PointLatLngAlt.ToUTM(utmzone, polygon), utmzone);
 
-            //  Se hace coincidir al primer y ultimo punto del polígono
             if (utmpositions[0] != utmpositions[utmpositions.Count - 1])
                 utmpositions.Add(utmpositions[0]); // make a full loop
 

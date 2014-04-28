@@ -72,7 +72,12 @@ namespace MissionPlanner.Log
                 {
                     genchkcombo(item.id);
 
-                    TXT_seriallog.AppendText(item.id + " " + new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc).AddSeconds(item.time_utc).ToLocalTime() + " est size: " + item.size +"\n");
+                    TXT_seriallog.AppendText(item.id + "\t" + new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc).AddSeconds(item.time_utc).ToLocalTime() + "\test size:\t" + item.size +"\r\n");
+                }
+
+                if (list.Count == 0)
+                {
+                    TXT_seriallog.AppendText("No logs to download");
                 }
             }
             catch { CustomMessageBox.Show("Cannot get log list.","Error"); this.Close(); }
@@ -202,7 +207,7 @@ namespace MissionPlanner.Log
                     File.Move(logfile.Replace(".log", ""), newlogfilename.Replace(".log", ".bin"));
                     logfile = newlogfilename;
                 }
-                catch (Exception ex) { CustomMessageBox.Show("Failed to rename file " + logfile + "\nto " + newlogfilename, "Error"); }
+                catch  { CustomMessageBox.Show("Failed to rename file " + logfile + "\nto " + newlogfilename, "Error"); }
             }
 
             return logfile;
@@ -402,7 +407,7 @@ namespace MissionPlanner.Log
 
             if (File.Exists(ofd.FileName))
             {
-                List<string> log = BinaryLog.ReadLog(ofd.FileName);
+                var log = BinaryLog.ReadLog(ofd.FileName);
 
                 SaveFileDialog sfd = new SaveFileDialog();
                 sfd.Filter = "log|*.log";
