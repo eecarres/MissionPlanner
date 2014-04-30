@@ -119,17 +119,27 @@ namespace SmartGridPlugin
         {
             plugin.Host.config["grid_camera"] = CMB_camera.Text;
             plugin.Host.config["grid_alt"] = NUM_altitude.Value.ToString();
+            MessageBox.Show(NUM_altitude.Value.ToString());
             plugin.Host.config["grid_angle"] = NUM_angle.Value.ToString();
+            MessageBox.Show(NUM_angle.Value.ToString());
             plugin.Host.config["grid_camdir"] = CHK_camdirection.Checked.ToString();
+            MessageBox.Show(CHK_camdirection.Checked.ToString());
 
             plugin.Host.config["grid_dist"] = NUM_Distance.Value.ToString();
+            MessageBox.Show(NUM_Distance.Value.ToString());
             plugin.Host.config["grid_overshoot1"] = NUM_overshoot.Value.ToString();
+            MessageBox.Show(NUM_overshoot.Value.ToString());
             plugin.Host.config["grid_overshoot2"] = NUM_overshoot2.Value.ToString();
+            MessageBox.Show(NUM_overshoot2.Value.ToString());
             plugin.Host.config["grid_overlap"] = num_overlap.Value.ToString();
+            MessageBox.Show(num_overlap.Value.ToString());
             plugin.Host.config["grid_sidelap"] = num_sidelap.Value.ToString();
+            MessageBox.Show(num_sidelap.Value.ToString());
             plugin.Host.config["grid_spacing"] = NUM_spacing.Value.ToString();
+            MessageBox.Show(NUM_spacing.Value.ToString());
 
             plugin.Host.config["grid_advanced"] = CHK_advanced.Checked.ToString();
+            MessageBox.Show(CHK_advanced.Checked.ToString());
         }
 
         void AddDrawPolygon()

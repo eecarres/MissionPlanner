@@ -31,6 +31,7 @@
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.map = new MissionPlanner.Controls.myGMAP();
             this.btnAceptar = new System.Windows.Forms.Button();
+            this.button1 = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -50,6 +51,7 @@
             // 
             // splitContainer1.Panel2
             // 
+            this.splitContainer1.Panel2.Controls.Add(this.button1);
             this.splitContainer1.Panel2.Controls.Add(this.btnAceptar);
             this.splitContainer1.Size = new System.Drawing.Size(1261, 645);
             this.splitContainer1.SplitterDistance = 580;
@@ -84,13 +86,23 @@
             // 
             // btnAceptar
             // 
-            this.btnAceptar.Location = new System.Drawing.Point(531, 16);
+            this.btnAceptar.Location = new System.Drawing.Point(304, 16);
             this.btnAceptar.Name = "btnAceptar";
             this.btnAceptar.Size = new System.Drawing.Size(176, 33);
             this.btnAceptar.TabIndex = 0;
             this.btnAceptar.Text = "Aceptar";
             this.btnAceptar.UseVisualStyleBackColor = true;
             this.btnAceptar.Click += new System.EventHandler(this.btnAceptar_Click);
+            // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(784, 16);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(176, 33);
+            this.button1.TabIndex = 1;
+            this.button1.Text = "Reconfigurar";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // VistaPrevia
             // 
@@ -115,6 +127,7 @@
         private System.Windows.Forms.SplitContainer splitContainer1;
         private MissionPlanner.Controls.myGMAP map;
         private System.Windows.Forms.Button btnAceptar;
+        private System.Windows.Forms.Button button1;
 
     }
 }

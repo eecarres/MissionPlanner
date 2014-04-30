@@ -228,7 +228,7 @@
     </Reference>
     <Reference Include="ProjNet, Version=1.2.4455.27045, Culture=neutral, PublicKeyToken=a1f5bdcd9c6f5740, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>packages\ProjNet.1.2\lib\net20\ProjNet.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\Mission Planner\ProjNet.dll</HintPath>
     </Reference>
     <Reference Include="px4uploader, Version=1.0.4855.33293, Culture=neutral, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
@@ -274,6 +274,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AcercaDe.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AcercaDe.Designer.cs">
+      <DependentUpon>AcercaDe.cs</DependentUpon>
+    </Compile>
     <Compile Include="Antenna\ArduTracker.cs" />
     <Compile Include="Antenna\DegreeTracker.cs" />
     <Compile Include="Antenna\ITrackerOutput.cs" />
@@ -530,6 +536,9 @@
     <Compile Include="Utilities\ParameterMetaDataRepositoryAutoTest.cs" />
     <Compile Include="Utilities\Firmware.cs" />
     <Compile Include="Utilities\ImageOverFilter.cs" />
+    <EmbeddedResource Include="AcercaDe.resx">
+      <DependentUpon>AcercaDe.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Controls\LogAnalyzer.resx">
       <DependentUpon>LogAnalyzer.cs</DependentUpon>
     </EmbeddedResource>
@@ -6012,7 +6021,7 @@
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.0">
       <Visible>False</Visible>
-      <ProductName>Microsoft .NET Framework 4 %28x86 and x64%29</ProductName>
+      <ProductName>Microsoft .NET Framework 4 %28x86 y x64%29</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
@@ -6090,7 +6099,8 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>"$(TargetDir)version.exe" "$(TargetPath)" &gt; "$(TargetDir)version.txt"</PostBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
     <PreBuildEvent>

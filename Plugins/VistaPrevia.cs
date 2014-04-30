@@ -14,6 +14,13 @@ namespace SmartGridPlugin
 {
     public partial class VistaPrevia : Form
     {
+        bool divisionCorrecta = false;
+
+        public bool DivisionCorrecta
+        {
+            get { return divisionCorrecta; }
+        }
+
        List<GMapPolygon> PoligonosAMostrar = new List<GMapPolygon>();
         public VistaPrevia(List<GMapPolygon> ListaPoligonos)
         {
@@ -54,8 +61,14 @@ namespace SmartGridPlugin
 
         private void btnAceptar_Click(object sender, EventArgs e)
         {
+            divisionCorrecta = true;
             this.Close();
 
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            this.Close();
         }
     }
 }

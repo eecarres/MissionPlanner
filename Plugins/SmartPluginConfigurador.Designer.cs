@@ -46,6 +46,8 @@
             this.numOverlap = new System.Windows.Forms.NumericUpDown();
             this.numSidelap = new System.Windows.Forms.NumericUpDown();
             this.numAltura = new System.Windows.Forms.NumericUpDown();
+            this.label12 = new System.Windows.Forms.Label();
+            this.numAngulo = new System.Windows.Forms.NumericUpDown();
             this.tabDivisionAreas = new System.Windows.Forms.TabPage();
             this.numFranjas = new System.Windows.Forms.NumericUpDown();
             this.label13 = new System.Windows.Forms.Label();
@@ -58,8 +60,8 @@
             this.label10 = new System.Windows.Forms.Label();
             this.label11 = new System.Windows.Forms.Label();
             this.btnAceptar = new System.Windows.Forms.Button();
-            this.label12 = new System.Windows.Forms.Label();
-            this.numAngulo = new System.Windows.Forms.NumericUpDown();
+            this.label14 = new System.Windows.Forms.Label();
+            this.lblArea = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -72,11 +74,11 @@
             ((System.ComponentModel.ISupportInitialize)(this.numOverlap)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numSidelap)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numAltura)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numAngulo)).BeginInit();
             this.tabDivisionAreas.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numFranjas)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numDespMaximo)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numAreaMaxima)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numAngulo)).BeginInit();
             this.SuspendLayout();
             // 
             // splitContainer1
@@ -96,6 +98,8 @@
             // 
             // splitContainer1.Panel2
             // 
+            this.splitContainer1.Panel2.Controls.Add(this.lblArea);
+            this.splitContainer1.Panel2.Controls.Add(this.label14);
             this.splitContainer1.Panel2.Controls.Add(this.btnAceptar);
             this.splitContainer1.Panel2MinSize = 5;
             this.splitContainer1.Size = new System.Drawing.Size(844, 624);
@@ -349,6 +353,29 @@
             0});
             this.numAltura.ValueChanged += new System.EventHandler(this.numericUpDown1_ValueChanged);
             // 
+            // label12
+            // 
+            this.label12.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
+            this.label12.AutoSize = true;
+            this.label12.Location = new System.Drawing.Point(172, 140);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(96, 45);
+            this.label12.TabIndex = 18;
+            this.label12.Text = "Ángulo [º]";
+            // 
+            // numAngulo
+            // 
+            this.numAngulo.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.numAngulo.Location = new System.Drawing.Point(513, 148);
+            this.numAngulo.Maximum = new decimal(new int[] {
+            359,
+            0,
+            0,
+            0});
+            this.numAngulo.Name = "numAngulo";
+            this.numAngulo.Size = new System.Drawing.Size(110, 28);
+            this.numAngulo.TabIndex = 19;
+            // 
             // tabDivisionAreas
             // 
             this.tabDivisionAreas.BackColor = System.Drawing.Color.DarkGray;
@@ -362,11 +389,11 @@
             this.tabDivisionAreas.Controls.Add(this.label9);
             this.tabDivisionAreas.Controls.Add(this.label10);
             this.tabDivisionAreas.Controls.Add(this.label11);
-            this.tabDivisionAreas.Location = new System.Drawing.Point(4, 25);
+            this.tabDivisionAreas.Location = new System.Drawing.Point(4, 30);
             this.tabDivisionAreas.Margin = new System.Windows.Forms.Padding(4);
             this.tabDivisionAreas.Name = "tabDivisionAreas";
             this.tabDivisionAreas.Padding = new System.Windows.Forms.Padding(4);
-            this.tabDivisionAreas.Size = new System.Drawing.Size(836, 434);
+            this.tabDivisionAreas.Size = new System.Drawing.Size(836, 429);
             this.tabDivisionAreas.TabIndex = 1;
             this.tabDivisionAreas.Text = "Division de áreas";
             // 
@@ -397,7 +424,7 @@
             // 
             this.label13.AutoSize = true;
             this.label13.Font = new System.Drawing.Font("Ubuntu Condensed", 10.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label13.Location = new System.Drawing.Point(144, 263);
+            this.label13.Location = new System.Drawing.Point(44, 263);
             this.label13.Name = "label13";
             this.label13.Size = new System.Drawing.Size(138, 23);
             this.label13.TabIndex = 18;
@@ -475,9 +502,9 @@
             "Divisiones horizontales",
             "Division con seleccion de franjas horizontales",
             "Division con seleccion de franjas verticales"});
-            this.cmbTipoDivision.Location = new System.Drawing.Point(301, 260);
+            this.cmbTipoDivision.Location = new System.Drawing.Point(209, 260);
             this.cmbTipoDivision.Name = "cmbTipoDivision";
-            this.cmbTipoDivision.Size = new System.Drawing.Size(246, 29);
+            this.cmbTipoDivision.Size = new System.Drawing.Size(338, 29);
             this.cmbTipoDivision.TabIndex = 14;
             this.cmbTipoDivision.SelectedIndexChanged += new System.EventHandler(this.cmbTipoDivision_SelectedIndexChanged);
             // 
@@ -532,28 +559,23 @@
             this.btnAceptar.UseVisualStyleBackColor = true;
             this.btnAceptar.Click += new System.EventHandler(this.btnAceptar_Click);
             // 
-            // label12
+            // label14
             // 
-            this.label12.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
-            this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(172, 140);
-            this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(96, 45);
-            this.label12.TabIndex = 18;
-            this.label12.Text = "Ángulo [º]";
+            this.label14.AutoSize = true;
+            this.label14.Location = new System.Drawing.Point(25, 58);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(56, 24);
+            this.label14.TabIndex = 1;
+            this.label14.Text = "Área:";
             // 
-            // numAngulo
+            // lblArea
             // 
-            this.numAngulo.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.numAngulo.Location = new System.Drawing.Point(513, 148);
-            this.numAngulo.Maximum = new decimal(new int[] {
-            359,
-            0,
-            0,
-            0});
-            this.numAngulo.Name = "numAngulo";
-            this.numAngulo.Size = new System.Drawing.Size(110, 28);
-            this.numAngulo.TabIndex = 19;
+            this.lblArea.AutoSize = true;
+            this.lblArea.Location = new System.Drawing.Point(87, 58);
+            this.lblArea.Name = "lblArea";
+            this.lblArea.Size = new System.Drawing.Size(17, 24);
+            this.lblArea.TabIndex = 2;
+            this.lblArea.Text = "-";
             // 
             // SmartPluginConfigurador
             // 
@@ -570,6 +592,7 @@
             this.Load += new System.EventHandler(this.SmartPluginConfigurador_Load);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
+            this.splitContainer1.Panel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
             this.tabControl1.ResumeLayout(false);
@@ -581,12 +604,12 @@
             ((System.ComponentModel.ISupportInitialize)(this.numOverlap)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numSidelap)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numAltura)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numAngulo)).EndInit();
             this.tabDivisionAreas.ResumeLayout(false);
             this.tabDivisionAreas.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numFranjas)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numDespMaximo)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numAreaMaxima)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numAngulo)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -625,6 +648,8 @@
         private System.Windows.Forms.Label lblFranjas;
         private System.Windows.Forms.Label label12;
         private System.Windows.Forms.NumericUpDown numAngulo;
+        private System.Windows.Forms.Label lblArea;
+        private System.Windows.Forms.Label label14;
 
     }
 }

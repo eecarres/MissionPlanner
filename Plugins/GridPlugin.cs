@@ -64,7 +64,7 @@ namespace SmartGridPlugin
         /// </summary>
         ToolStripMenuItem but = new ToolStripMenuItem("SmartGrid by Hemav");
 
-        public List<GMapPolygon> listaPoligonos = new List<GMapPolygon>();
+         public List<GMapPolygon> listaPoligonos = new List<GMapPolygon>();
 
         public override bool Init()
         {
@@ -125,13 +125,38 @@ namespace SmartGridPlugin
         }
 
         /// <summary>
-        /// Con el polígono dibujado y los parámetros de configuración, divide el polígono y devuelve la lista de polígonos generados
+        /// Con el polígono dibujado y los parámetros de configuración, divide el polígono y muestra la división. Si no es correcta, permite reconfigurar y volver a dividir. 
+        /// Luego genera la ruta con el Grid
         /// </summary>
         void procesarPoligono()
         {
+            bool divisionCorrecta = false;
+
+
+            while (divisionCorrecta == false)
+            {
+                divisionCorrecta = ConfigurarDivision(divisionCorrecta); 
+            }
+
+            
+
+            listaPoligonos.RemoveAt(0);
+            //LLamar a los Grids!
+            foreach (GMapPolygon poligono in listaPoligonos)
+            {
+               GridUI gridUI = new GridUI(this, poligono);
+                gridUI.ShowDialog();
+
+            }
+            
+        }
+
+        private bool ConfigurarDivision(bool divisionCorrecta)
+        {
             listaPoligonos.Clear();
             listaPoligonos.Add(Host.FPDrawnPolygon);
-            SmartPluginConfigurador form = new SmartGridPlugin.SmartPluginConfigurador();
+            double areaPoligono = Utilidades.calcpolygonarea(Host.FPDrawnPolygon.Points)/10000;
+            SmartPluginConfigurador form = new SmartGridPlugin.SmartPluginConfigurador(areaPoligono);
             form.ShowDialog();
 
             List<PointLatLng> listaPuntosPoligonoInicial = new List<PointLatLng>();
@@ -152,44 +177,41 @@ namespace SmartGridPlugin
                     break;
             }
 
-            // Guardamos la configuración como configuracion por defecto de los Grids
-
-            
-
-            
-
-            //Host.config["grid_camera"] = form.Camara;
-            //Host.config["grid_alt"] = form.Altura.ToString();
-            //Host.config["grid_angle"] = "0";
-            //Host.config["grid_camdir"] = "true";
-
-            //Host.config["grid_dist"] = "10";
-            //Host.config["grid_overshoot1"] = form.OvershootHorizontal.ToString();
-            //Host.config["grid_overshoot2"] = form.OvershootVertical.ToString();
-            //Host.config["grid_overlap"] = form.Overlap.ToString();
-            //Host.config["grid_sidelap"] = form.Sidelap.ToString();
-            //Host.config["grid_spacing"] = "10";
-
-            //Host.config["grid_advanced"] = "true";   
-
 
             // llamar a una ventana que nos muestre un mapa con los polígonos generados
 
             VistaPrevia vistaPrevia = new VistaPrevia(listaPoligonos);
             vistaPrevia.ShowDialog();
 
+            divisionCorrecta = vistaPrevia.DivisionCorrecta;
 
-            listaPoligonos.RemoveAt(0);
-            //LLamar a los Grids!
-            foreach (GMapPolygon poligono in listaPoligonos)
+            if (divisionCorrecta)
             {
-               GridUI gridUI = new GridUI(this, poligono);
-                gridUI.ShowDialog();
+                Host.config["grid_camera"] = form.Camara;
+                Host.config["grid_alt"] = form.Altura.ToString();
+                Host.config["grid_angle"] = "10";
+                Host.config["grid_camdir"] = "True";
+
+                Host.config["grid_dist"] = "10";
+                Host.config["grid_overshoot1"] = form.OvershootHorizontal.ToString();
+                Host.config["grid_overshoot2"] = form.OvershootVertical.ToString();
+                Host.config["grid_overlap"] = form.Overlap.ToString();
+                Host.config["grid_sidelap"] = form.Sidelap.ToString();
+                Host.config["grid_spacing"] = "10";
+
+                Host.config["grid_startfrom"] = "Home";
+
+                Host.config["grid_advanced"] = "True";
 
             }
-            
+
+            return divisionCorrecta;
         }
 
+        /// <summary>
+        /// Exit is only called on plugin unload. not app exit
+        /// </summary>
+        /// <returns></returns>
         public override bool Exit()
         {
             return true;

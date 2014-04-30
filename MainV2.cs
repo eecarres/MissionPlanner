@@ -21,6 +21,7 @@ using log4net;
 using MissionPlanner.Controls;
 using System.Security.Cryptography;
 using MissionPlanner.Comms;
+using MissionPlanner.Utilities;
 using MissionPlanner.Arduino;
 using Transitions;
 using System.Web.Script.Serialization;
@@ -28,6 +29,7 @@ using System.Speech.Synthesis;
 using MissionPlanner;
 using MissionPlanner.Joystick;
 using System.Collections.ObjectModel;
+using ProjNet;
 
 namespace MissionPlanner
 {
@@ -2533,6 +2535,12 @@ namespace MissionPlanner
                 this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
                 this.WindowState = FormWindowState.Maximized;
             }
+        }
+
+        private void toolStripButton1_Click(object sender, EventArgs e)
+        {
+            AcercaDe acercaDeForm = new AcercaDe();
+            acercaDeForm.ShowDialog();
         }
     }
 }

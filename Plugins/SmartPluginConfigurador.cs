@@ -75,11 +75,12 @@ namespace SmartGridPlugin
 
 
           // Métodos del plugin  
-        public SmartPluginConfigurador()
+        public SmartPluginConfigurador(double areaPoligono)
         {
             InitializeComponent();
             lblFranjas.Hide();
             numFranjas.Hide();
+            lblArea.Text = areaPoligono.ToString();
         }
 
         private void btnAceptar_Click(object sender, EventArgs e)
@@ -160,6 +161,7 @@ namespace SmartGridPlugin
         private void SmartPluginConfigurador_Load(object sender, EventArgs e)
         {
             franjas = decimal.ToInt16(numFranjas.Value);
+            
         }
     }
 }
