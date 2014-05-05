@@ -230,11 +230,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\..\..\Program Files (x86)\Mission Planner\ProjNet.dll</HintPath>
     </Reference>
-    <Reference Include="px4uploader, Version=1.0.4855.33293, Culture=neutral, processorArchitecture=x86">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\px4uploader\bin\Release\px4uploader.exe</HintPath>
-      <EmbedInteropTypes>False</EmbedInteropTypes>
-    </Reference>
     <Reference Include="System">
       <Private>False</Private>
     </Reference>
@@ -368,6 +363,12 @@
     </Compile>
     <Compile Include="Controls\DefaultSettings.Designer.cs">
       <DependentUpon>DefaultSettings.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GCSViews\ConfigurationView\ConfigMotorTest.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GCSViews\ConfigurationView\ConfigMotorTest.Designer.cs">
+      <DependentUpon>ConfigMotorTest.cs</DependentUpon>
     </Compile>
     <Compile Include="GCSViews\ConfigurationView\ConfigWizard.cs">
       <SubType>UserControl</SubType>
@@ -530,6 +531,7 @@
       <DependentUpon>FollowPathControl.cs</DependentUpon>
     </Compile>
     <Compile Include="System.cs" />
+    <Compile Include="Utilities\Airports.cs" />
     <Compile Include="Utilities\GitHubContent.cs" />
     <Compile Include="Utilities\GMapMarkerRallyPt.cs" />
     <Compile Include="Utilities\LogAnalyzer.cs" />
@@ -559,6 +561,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigCompassMot.resx">
       <DependentUpon>ConfigCompassMot.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigMotorTest.resx">
+      <DependentUpon>ConfigMotorTest.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigRawParams.zh-Hans.resx">
       <DependentUpon>ConfigRawParams.cs</DependentUpon>
@@ -645,6 +650,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="aircraft\Rascal\Systems\ugear.nas">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="airports.csv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Drivers\amd64\ftd2xx.lib">
@@ -1684,6 +1692,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="GCSViews\Simple.zh-TW.resx">
       <DependentUpon>Simple.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigFirmware.de-DE.resx">
       <DependentUpon>ConfigFirmware.cs</DependentUpon>
@@ -1988,6 +1997,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="GCSViews\FlightData.zh-TW.resx">
       <DependentUpon>FlightData.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="GCSViews\FlightPlanner.fr.resx">
       <DependentUpon>FlightPlanner.cs</DependentUpon>
@@ -6082,6 +6092,10 @@
     <ProjectReference Include="ExtLibs\MetaDataExtractorCSharp240d\MetaDataExtractor.csproj">
       <Project>{b46f6c6c-9184-41af-8f8b-e0084752ca7c}</Project>
       <Name>MetaDataExtractor</Name>
+    </ProjectReference>
+    <ProjectReference Include="ExtLibs\px4uploader\px4uploader.csproj">
+      <Project>{664fc484-2a94-4b0d-808f-a71f88e06b11}</Project>
+      <Name>px4uploader</Name>
     </ProjectReference>
     <ProjectReference Include="ExtLibs\SharpKml\SharpKml.csproj">
       <Project>{53F12A60-E9CC-44BC-8366-1AE3AB2B547D}</Project>
