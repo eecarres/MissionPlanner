@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Globalization;
+using log4net;
+using System.Reflection;
 
 namespace MissionPlanner.Utilities
 {
@@ -15,7 +18,98 @@ namespace MissionPlanner.Utilities
 
         //http://ourairports.com/data/
 
-        public static List<PointLatLngAlt> airports = new List<PointLatLngAlt>();
+        //http://openflights.org/data.html
+
+        private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+
+        static List<PointLatLngAlt> airports = new List<PointLatLngAlt>();
+
+        public static int GetAirportCount { get { return airports.Count; } }
+
+        static PointLatLngAlt currentcenter = PointLatLngAlt.Zero;
+
+        // 100km
+        public static int proximity = 100000; 
+
+        static List<PointLatLngAlt> cache = new List<PointLatLngAlt>();
+
+        public static List<PointLatLngAlt> getAirports(PointLatLngAlt centerpoint)
+        {
+            log.Info("getAirports " + centerpoint);
+
+            // check if we have moved 66% from our last cache center point
+            if (currentcenter.GetDistance(centerpoint) < ((proximity/3)*2)) 
+            {
+                 return cache;
+            }
+
+            log.Info("getAirports - regen list");
+
+            // generate a new list
+            currentcenter = centerpoint;
+
+            cache.Clear();
+
+            foreach (PointLatLngAlt item in airports)
+            {
+                if (item.GetDistance(centerpoint) < proximity) 
+                {
+                    cache.Add(item);                
+                }
+            }
+
+            return cache;
+        }
+
+        public static void AddAirport(PointLatLngAlt plla)
+        {
+           // foreach (PointLatLngAlt item in airports)
+            {
+              //  if (item.GetDistance(plla) < 200)
+                {
+              //      return;
+                }
+            }
+
+            airports.Add(plla);
+        }
+
+        public static void ReadOpenflights(string fn)
+        {
+            string[] lines = File.ReadAllLines(fn);
+
+            foreach (var line in lines)
+            {
+                string[] items = line.Split(',');
+
+                if (items.Length == 0)
+                    continue;
+
+                try
+                {
+
+                    string name = items[1];
+                    int latOffset = 0;
+                    while (name[0] == '"' && name[name.Length - 1] != '"')
+                    {
+                        latOffset += 1;
+                        name = name + "," + items[2 + latOffset];
+                    }
+                    name = name.Trim('"');
+                    double lat = double.Parse(items[6 + latOffset].Trim('"'), CultureInfo.InvariantCulture);
+                    double lng = double.Parse(items[7 + latOffset].Trim('"'), CultureInfo.InvariantCulture);
+                    double alt = 0;
+
+                    //double alt = double.Parse(items[8 + latOffset].Trim('"')) * 0.3048;
+
+                    var newap = new PointLatLngAlt(lat, lng, alt, name);
+
+                    AddAirport(newap);
+                    Console.WriteLine(newap);
+                }
+                catch { }
+            }
+        }
 
         public static void ReadOurairports(string fn)
         {
@@ -34,17 +128,23 @@ namespace MissionPlanner.Utilities
                 try
                 {
 
-                    string name = items[3].Trim('"');
-
-                    double lat = double.Parse(items[4].Trim('"'));
-                    double lng = double.Parse(items[5].Trim('"'));
+                    string name = items[3];
+                    int latOffset = 0;
+                    while (name[0] == '"' && name[name.Length - 1] != '"')
+                    {
+                        latOffset += 1;
+                        name = name + "," + items[3 + latOffset];
+                    }
+                    name = name.Trim('"');
+                    double lat = double.Parse(items[4 + latOffset].Trim('"'), CultureInfo.InvariantCulture);
+                    double lng = double.Parse(items[5 + latOffset].Trim('"'), CultureInfo.InvariantCulture);
                     double alt = 0;
 
-                    //double alt = double.Parse(items[6].Trim('"')) * 0.3048;
+                    //double alt = double.Parse(items[6 + latOffset].Trim('"')) * 0.3048;
 
                     var newap = new PointLatLngAlt(lat, lng, alt, name);
 
-                    airports.Add(newap);
+                    AddAirport(newap);
                     Console.WriteLine(newap);
                 }
                 catch { }
@@ -89,7 +189,7 @@ namespace MissionPlanner.Utilities
 
                 var newap = new PointLatLngAlt(lat, lng, 0, name);
 
-                airports.Add(newap);
+                AddAirport(newap);
                 Console.WriteLine(newap);
             }
         }
@@ -129,7 +229,7 @@ namespace MissionPlanner.Utilities
 
                 var newap = new PointLatLngAlt(northing, easting, 0, name);
 
-                airports.Add(newap);
+                AddAirport(newap);
                 Console.WriteLine(newap);
             }
         }

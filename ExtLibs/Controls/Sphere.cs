@@ -161,7 +161,8 @@ namespace MissionPlanner.Controls
 
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
-            GL.PointSize(3);
+            // 3
+            GL.PointSize(8);
 
             GL.Begin(PrimitiveType.Lines);
 
@@ -224,7 +225,8 @@ namespace MissionPlanner.Controls
 
                 GL.End();
 
-                GL.PointSize(8);
+                // 8
+                GL.PointSize(12);
 
                 GL.Begin(PrimitiveType.Points);
 
