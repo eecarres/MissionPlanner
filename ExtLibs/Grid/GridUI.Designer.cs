@@ -83,6 +83,7 @@
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabSimple = new System.Windows.Forms.TabPage();
             this.groupBox6 = new System.Windows.Forms.GroupBox();
+            this.CHK_toandland = new System.Windows.Forms.CheckBox();
             this.label24 = new System.Windows.Forms.Label();
             this.numericUpDownFlySpeed = new System.Windows.Forms.NumericUpDown();
             this.label26 = new System.Windows.Forms.Label();
@@ -119,7 +120,6 @@
             this.lbl_area = new System.Windows.Forms.Label();
             this.label23 = new System.Windows.Forms.Label();
             this.label22 = new System.Windows.Forms.Label();
-            this.CHK_toandland = new System.Windows.Forms.CheckBox();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.NUM_spacing)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.NUM_overshoot2)).BeginInit();
@@ -642,6 +642,15 @@
             this.groupBox6.Name = "groupBox6";
             this.groupBox6.TabStop = false;
             // 
+            // CHK_toandland
+            // 
+            resources.ApplyResources(this.CHK_toandland, "CHK_toandland");
+            this.CHK_toandland.Checked = true;
+            this.CHK_toandland.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.CHK_toandland.Name = "CHK_toandland";
+            this.CHK_toandland.UseVisualStyleBackColor = true;
+            this.CHK_toandland.CheckedChanged += new System.EventHandler(this.CHK_toandland_CheckedChanged);
+            // 
             // label24
             // 
             resources.ApplyResources(this.label24, "label24");
@@ -904,14 +913,6 @@
             // 
             resources.ApplyResources(this.label22, "label22");
             this.label22.Name = "label22";
-            // 
-            // CHK_toandland
-            // 
-            resources.ApplyResources(this.CHK_toandland, "CHK_toandland");
-            this.CHK_toandland.Checked = true;
-            this.CHK_toandland.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.CHK_toandland.Name = "CHK_toandland";
-            this.CHK_toandland.UseVisualStyleBackColor = true;
             // 
             // GridUI
             // 

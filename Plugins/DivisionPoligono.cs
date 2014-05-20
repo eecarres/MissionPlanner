@@ -14,24 +14,50 @@ using GeoUtility;
 
 namespace SmartGridPlugin
 {
+    /// <summary>
+    /// Contiene los métodos que dividen el polígono de diversos modos
+    /// </summary>
     class DivisionPoligono
     {
+        /// <summary>
+        /// Control de iteraciones del área
+        /// </summary>
         public static  int iteraciones = 0; // Control de las iteraciones del área
+        /// <summary>
+        /// Lista de puntos del polígono generado
+        /// </summary>
         public static List<PointLatLng> listaPoligonoGenerado = new List<PointLatLng>();
+        /// <summary>
+        /// Lista de puntos del polígono restante
+        /// </summary>
         public static List<PointLatLng> listaPoligonoRestante = new List<PointLatLng>();
+        /// <summary>
+        /// Lista de puntos del polígono restante temporal
+        /// </summary>
         public static List<PointLatLng> listaPoligonoRestanteTemporal = new List<PointLatLng>();
+        /// <summary>
+        /// Lista de puntos del polígono generado temporal
+        /// </summary>
         public static List<PointLatLng> listaPoligonoGeneradoTemporal = new List<PointLatLng>();
+        /// <summary>
+        /// Lista de rectas del polígono
+        /// </summary>
         public static  List<Recta> listaRectas = new List<Recta>();
 
-        // La llamada desde el formulario debe incluir el polígono dibujado y la lista de los polígonos del mapa
+        /// <summary>
+        /// Divide el polígono entrante con rectas verticales y escribe el resultado en la lista de polígonos, dados los parámetros de área y desplazamiento máximos
+        /// </summary>
+        /// <param name="puntosPoligono">Puntos del polígono inicial</param>
+        /// <param name="listaPoligono">Lista de polígonos que se crean</param>
+        /// <param name="areaMaxima">Hectáreas máximas de la parcela</param>
+        /// <param name="desplazamientoMaximo">Desplazamiento máximo de la recta en cada iteracion (metros)</param>
         public static void divisionVertical(List<PointLatLng> puntosPoligono, List<GMapPolygon> listaPoligono, double areaMaxima, double desplazamientoMaximo)
         {
-            //Creamos la lista de puntos UTM del polígono
+            //Creamos la lista de puntos UTM y WGS  del polígono
             List<double[]> puntosUTMPoligono = new List<double[]>();
             List<PointLatLng> puntosWGSPoligono = new List<PointLatLng>();
+            
             // Algoritmo que reordena los puntos. El primero, el de la izquierda del todo, luego sentido horario
-
-
             int utmzone = Utilidades.ZonaUtm(puntosPoligono[0]); // Zona UTM del primer punto definido
             for (int i = 0; i < puntosPoligono.Count; i++)
             {
@@ -98,11 +124,6 @@ namespace SmartGridPlugin
                 areaCalculada = 0;
                 iteraciones = 0;
 
-
-
-
-
-
                 if (i == 0) // La primera vez, el polígono es el que habíamos dibujado y entra como referencia
                 {
                     SacaRectas(puntosUTMPoligono, utmzone);
@@ -110,8 +131,6 @@ namespace SmartGridPlugin
                     {
                         areaCalculada = CalculaAreaVertical(puntosUTMPoligono, listaRectas, utmzone, puntoControl, desplazamientoMaximo);
                     }
-
-
                 }
                 else // para el resto de ocasiones, el área se calcula con el polígono restante que hemos obtenido en la iteración anterior.
                 {
@@ -127,7 +146,6 @@ namespace SmartGridPlugin
                     {
                         areaCalculada = CalculaAreaVertical(poligonoUTMRestante, listaRectas, utmzone, puntoControl, desplazamientoMaximo);
                     }
-                    //MessageBox.Show((i+1)+" Área calculada. Valor: " + areaCalculada);
                 }
 
                 // Se generan los dos polígonos y se asignan valores para sus representacione gráficas
@@ -144,21 +162,25 @@ namespace SmartGridPlugin
                 {
                     listaPoligono.Add(poligonoRestante);
                 }
-
-
             }
-
         }
-
+        
+        /// <summary>
+        /// (versión para franjas) Divide el polígono entrante con rectas verticales y escribe el resultado en la lista de polígonos, dados los parámetros de área y desplazamiento máximos
+        /// </summary>
+        /// <param name="puntosPoligono">Puntos del polígono inicial</param>
+        /// <param name="listaPoligono">Lista de polígonos que se crean</param>
+        /// <param name="areaMaxima">Hectáreas máximas de la parcela</param>
+        /// <param name="desplazamientoMaximo">Desplazamiento máximo de la recta en cada iteracion (metros)</param>
+        ///  <param name="franjas">Subdivisiones de cada subpolígono generado</param>
         public static void divisionVertical(List<PointLatLng> puntosPoligono, List<GMapPolygon> listaPoligono, double areaMaxima, double desplazamientoMaximo, int franjas)
         {
             //Creamos la lista de puntos UTM del polígono
             List<double[]> puntosUTMPoligono = new List<double[]>();
             List<PointLatLng> puntosWGSPoligono = new List<PointLatLng>();
             double areaFranjas = areaMaxima;
+
             // Algoritmo que reordena los puntos. El primero, el de la izquierda del todo, luego sentido horario
-
-
             int utmzone = Utilidades.ZonaUtm(puntosPoligono[0]); // Zona UTM del primer punto definido
             for (int i = 0; i < puntosPoligono.Count; i++)
             {
@@ -270,7 +292,14 @@ namespace SmartGridPlugin
  
 
         }
-
+        
+        /// <summary>
+        /// Divide el polígono entrante con rectas horizontales y escribe el resultado en la lista de polígonos, dados los parámetros de área y desplazamiento máximos
+        /// </summary>
+        /// <param name="puntosPoligono">Puntos del polígono inicial</param>
+        /// <param name="listaPoligono">Lista de polígonos que se crean</param>
+        /// <param name="areaMaxima">Hectáreas máximas de la parcela</param>
+        /// <param name="desplazamientoMaximo">Desplazamiento máximo de la recta en cada iteracion (metros)</param>
         public static void divisionHorizontal(List<PointLatLng> puntosPoligono, List<GMapPolygon> listaPoligono, double areaMaxima, double desplazamientoMaximo)
         {
             //Creamos la lista de puntos UTM del polígono
@@ -397,6 +426,14 @@ namespace SmartGridPlugin
 
         }
 
+        /// <summary>
+        /// (versión para franjas) Divide el polígono entrante con rectas horizontales y escribe el resultado en la lista de polígonos, dados los parámetros de área y desplazamiento máximos
+        /// </summary>
+        /// <param name="puntosPoligono">Puntos del polígono inicial</param>
+        /// <param name="listaPoligono">Lista de polígonos que se crean</param>
+        /// <param name="areaMaxima">Hectáreas máximas de la parcela</param>
+        /// <param name="desplazamientoMaximo">Desplazamiento máximo de la recta en cada iteracion (metros)</param>
+        /// <param name="franjas">Subdivisiones de cada subpolígono generado</param>
         public static void divisionHorizontal(List<PointLatLng> puntosPoligono, List<GMapPolygon> listaPoligono, double areaMaxima, double desplazamientoMaximo, int franjas)
         {
             //Creamos la lista de puntos UTM del polígono
@@ -517,8 +554,12 @@ namespace SmartGridPlugin
 
 
         }
-
-        // Función que calcula cuanto hay que mover la línea, dado el valor de distancia en X de los dos puntos de la recta que recorremos
+      
+        /// <summary>
+        /// Función que calcula cuanto hay que mover la línea, dado el valor de distancia en X de los dos puntos de la recta que recorremos
+        /// </summary>
+        /// <param name="distanciaEntrePuntos">Distancia calculada entre las líneas divisorias(siempre menor o igual al desplazamiento máximo)</param>
+        /// <returns></returns>
         public static double IncrementoLineal(double distanciaEntrePuntos)
         {
             double resultado;
@@ -530,7 +571,15 @@ namespace SmartGridPlugin
         
         }
 
-        // Funcion que calcula el area dado el poligono 
+        /// <summary>
+        /// Funcion que calcula el area dado el poligono, sus rectas, la zona UTM, el desplazamiento máximo y el punto de control (lugar donde se encuentra la recta divisoria)
+        /// </summary>
+        /// <param name="puntosUTMPoligono">Los puntos del polígono cuya área queremos calcular convertidos a UTM</param>
+        /// <param name="listaRectas">La lista de rectas que forman el polígono</param>
+        /// <param name="utmzone">Zona UTM del primer punto del polígono</param>
+        /// <param name="puntoControl">Posición de la recta divisoria</param>
+        /// <param name="incrementoMax">Equivale al  desplazamiento máximo (parámetro de la función principal de división)</param>
+        /// <returns></returns>
         public static double CalculaAreaVertical(List<double[]> puntosUTMPoligono, List<Recta> listaRectas, int utmzone,double[] puntoControl,double incrementoMax)
         { 
         double resultado;
@@ -631,7 +680,16 @@ namespace SmartGridPlugin
 
             return resultado;
         }
-        
+
+        /// <summary>
+        /// Funcion que calcula el area dado el poligono, sus rectas, la zona UTM, el desplazamiento máximo y el punto de control (lugar donde se encuentra la recta divisoria)
+        /// </summary>
+        /// <param name="puntosUTMPoligono">Los puntos del polígono cuya área queremos calcular convertidos a UTM</param>
+        /// <param name="listaRectas">La lista de rectas que forman el polígono</param>
+        /// <param name="utmzone">Zona UTM del primer punto del polígono</param>
+        /// <param name="puntoControl">Posición de la recta divisoria</param>
+        /// <param name="incrementoMax">Equivale al  desplazamiento máximo (parámetro de la función principal de división)</param>
+        /// <returns></returns>
         public static double CalculaAreaHorizontal(List<double[]> puntosUTMPoligono, List<Recta> listaRectas, int utmzone,double[] puntoControl,double incrementoMax)
         { 
         double resultado;
@@ -731,6 +789,15 @@ namespace SmartGridPlugin
             return resultado;
         }
 
+        /// <summary>
+        /// Funcion que calcula el area dado el poligono, sus rectas, la zona UTM, el desplazamiento máximo y el punto de control (lugar donde se encuentra la recta divisoria)
+        /// </summary>
+        /// <param name="puntosUTMPoligono">Los puntos del polígono cuya área queremos calcular convertidos a UTM</param>
+        /// <param name="listaRectas">La lista de rectas que forman el polígono</param>
+        /// <param name="utmzone">Zona UTM del primer punto del polígono</param>
+        /// <param name="puntoControl">Posición de la recta divisoria</param>
+        /// <param name="incrementoMax">Equivale al  desplazamiento máximo (parámetro de la función principal de división)</param>
+        /// <returns></returns>
         public static double CalculaAreaVerticalFranja(List<double[]> puntosUTMPoligono, List<Recta> listaRectas, int utmzone, double[] puntoControl, double incrementoMax)
         {
             double resultado;
@@ -832,6 +899,15 @@ namespace SmartGridPlugin
             return resultado;
         }
 
+        /// <summary>
+        /// Funcion que calcula el area dado el poligono, sus rectas, la zona UTM, el desplazamiento máximo y el punto de control (lugar donde se encuentra la recta divisoria)
+        /// </summary>
+        /// <param name="puntosUTMPoligono">Los puntos del polígono cuya área queremos calcular convertidos a UTM</param>
+        /// <param name="listaRectas">La lista de rectas que forman el polígono</param>
+        /// <param name="utmzone">Zona UTM del primer punto del polígono</param>
+        /// <param name="puntoControl">Posición de la recta divisoria</param>
+        /// <param name="incrementoMax">Equivale al  desplazamiento máximo (parámetro de la función principal de división)</param>
+        /// <returns></returns>
         public static double CalculaAreaHorizontalFranja(List<double[]> puntosUTMPoligono, List<Recta> listaRectas, int utmzone, double[] puntoControl, double incrementoMax)
         {
             double resultado;
@@ -931,6 +1007,10 @@ namespace SmartGridPlugin
             return resultado;
         }
 
+        /// <summary>
+        /// Obtiene las rectas dado el polígono
+        /// </summary>
+        /// <param name="puntosWGSPoligono">Los puntos del polígono en Lat-Lng</param>
         public static void SacaRectas(List<PointLatLng> puntosWGSPoligono)
         {
             listaRectas.Clear();
@@ -943,6 +1023,12 @@ namespace SmartGridPlugin
             }
             
         }
+       
+        /// <summary>
+        /// Obtiene las rectas dado el polígono
+        /// </summary>
+        /// <param name="puntosUTMPoligono">Los puntos del polígono en UTM</param>
+        /// <param name="utmzone">Zona UTM del primer punto del polígono</param>
         public static void SacaRectas(List<double[]> puntosUTMPoligono,int utmzone)
         {
             listaRectas.Clear();

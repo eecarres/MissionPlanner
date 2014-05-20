@@ -11,16 +11,29 @@ using MissionPlanner.Utilities;
 
 namespace SmartGridPlugin
 {
+    /// <summary>
+    /// Contiene métodos que se emplean en diversas clases, como conversiones de unidades o cálculos de áreas
+    /// </summary>
     class Utilidades
     {
-        // Metodo que devuelve la zona UTM del punto (en lat y long)
+        /// <summary>
+        /// Devuelve la zona UTM del punto especificado (en esféricas)
+        /// </summary>
+        /// <param name="puntoInicial">Punto en esféricas.</param>
+        /// <returns></returns>
         public static int ZonaUtm(PointLatLng puntoInicial)
         {
             int utmzone = (int)((puntoInicial.Lng - -186.0) / 6.0); // Sacamos la zona utm del primer punto del polígono
             return utmzone;
         }
 
-        // Pasa a cartesianas (array de double) el punto en Lat y Lng
+      
+        /// <summary>
+        /// Pasa a cartesianas (array de double) el punto en Lat y Lng
+        /// </summary>
+        /// <param name="puntoEsfericas">Punto en esféricas</param>
+        /// <param name="utmzone">Zona UTM del punto</param>
+        /// <returns></returns>
         public static double[] PasarACartesianas(PointLatLng puntoEsfericas,int utmzone)
         {
             PointLatLngAlt pnt = new PointLatLngAlt(puntoEsfericas);
@@ -32,7 +45,12 @@ namespace SmartGridPlugin
            
         }
 
-        // Pasa a Lat y Lng el punto en cartesianas (array de double)
+        /// <summary>
+        /// Pasa a Lat y Lng el punto en cartesianas (array de double)
+        /// </summary>
+        /// <param name="puntoWGS">Punto en UTM</param>
+        /// <param name="utmzone">Zona UTM del punto</param>
+        /// <returns></returns>
         public static PointLatLng PasarAWGS(double[] puntoWGS, int utmzone)
         {
             //CoordinateTransformationFactory ctfac = new CoordinateTransformationFactory(); // Creamos una instancia del convertidor de coordenadas
@@ -56,7 +74,11 @@ namespace SmartGridPlugin
             return puntoSalida;
         }
 
-        // Función de calculo de área del polígono, definida en el GRIDUI.cs, sin cambiar de nombre
+        /// <summary>
+        /// Función de cálculo del área
+        /// </summary>
+        /// <param name="polygon">The polygon.</param>
+        /// <returns></returns>
         static public double calcpolygonarea(List<PointLatLng> polygon)
         {
             // Para el cálculo del area el polígono debe ser cerrado
@@ -106,7 +128,13 @@ namespace SmartGridPlugin
             return Math.Abs(answer); //Devolvemos el valor del área
         }
 
-        //Funcion para encontrar la interseccion de dos rectas
+       
+        /// <summary>
+        /// Devuelve la intersección de una recta vertical con otra recta cualquiera
+        /// </summary>
+        /// <param name="recta1">Recta que se quiere intersecar</param>
+        /// <param name="puntoControl">Punto en el que se encuentra la recta vertical</param>
+        /// <returns></returns>
         public static double[] InterseccionVertical(Recta recta1, double[] puntoControl)
         {
             double x = puntoControl[0];
@@ -116,6 +144,13 @@ namespace SmartGridPlugin
             return solucion;
         }
 
+        
+        /// <summary>
+        /// Devuelve la intersección de una recta horizontal con otra recta cualquiera
+        /// </summary>
+        /// <param name="recta1">Recta que se quiere intersecar</param>
+        /// <param name="puntoControl">Punto en el que se encuentra la recta horizontal</param>
+        /// <returns></returns>
         public static double[] InterseccionHorizontal(Recta recta1, double[] puntoControl)
         {
             

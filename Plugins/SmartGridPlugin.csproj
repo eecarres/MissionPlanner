@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{9EB725D8-B6C2-4BB3-9937-8881BC35DAC8}</ProjectGuid>
+    <ProjectGuid>{BBACC856-DA2B-4AC1-8864-C64F6DC8F065}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>PluginTest</RootNamespace>
@@ -22,6 +22,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <PlatformTarget>AnyCPU</PlatformTarget>
+    <DocumentationFile>..\bin\Debug\plugins\PluginTest.XML</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -80,6 +81,12 @@
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Recta.cs" />
+    <Compile Include="RectaUI.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="RectaUI.Designer.cs">
+      <DependentUpon>RectaUI.cs</DependentUpon>
+    </Compile>
     <Compile Include="SmartPluginConfigurador.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -138,6 +145,9 @@
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="RectaUI.resx">
+      <DependentUpon>RectaUI.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="SmartPluginConfigurador.resx">
       <DependentUpon>SmartPluginConfigurador.cs</DependentUpon>

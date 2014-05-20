@@ -22,6 +22,9 @@ using ProjNet.CoordinateSystems.Transformations;
 
 namespace SmartGridPlugin
 {
+    /// <summary>
+    /// Se encarga de pedir datos para cada Grid por separado y mostrar el resultado previo
+    /// </summary>
     public partial class GridUI : Form
     {
         private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
@@ -34,7 +37,7 @@ namespace SmartGridPlugin
         GMapPolygon wppoly;
         private GridPlugin plugin;
         List<PointLatLngAlt> grid;
-
+        
         Dictionary<string, camerainfo> cameras = new Dictionary<string, camerainfo>();
 
         public struct camerainfo
@@ -75,7 +78,7 @@ namespace SmartGridPlugin
             {
 
                 loadsetting("grid_alt", NUM_altitude);
-                //  loadsetting("grid_angle", NUM_angle);
+               loadsetting("grid_angle", NUM_angle);
                 loadsetting("grid_camdir", CHK_camdirection);
 
                 loadsetting("grid_dist", NUM_Distance);
@@ -119,27 +122,16 @@ namespace SmartGridPlugin
         {
             plugin.Host.config["grid_camera"] = CMB_camera.Text;
             plugin.Host.config["grid_alt"] = NUM_altitude.Value.ToString();
-            MessageBox.Show(NUM_altitude.Value.ToString());
-            plugin.Host.config["grid_angle"] = NUM_angle.Value.ToString();
-            MessageBox.Show(NUM_angle.Value.ToString());
+            plugin.Host.config["grid_angle"] = NUM_angle.Value.ToString();      
             plugin.Host.config["grid_camdir"] = CHK_camdirection.Checked.ToString();
-            MessageBox.Show(CHK_camdirection.Checked.ToString());
-
             plugin.Host.config["grid_dist"] = NUM_Distance.Value.ToString();
-            MessageBox.Show(NUM_Distance.Value.ToString());
             plugin.Host.config["grid_overshoot1"] = NUM_overshoot.Value.ToString();
-            MessageBox.Show(NUM_overshoot.Value.ToString());
             plugin.Host.config["grid_overshoot2"] = NUM_overshoot2.Value.ToString();
-            MessageBox.Show(NUM_overshoot2.Value.ToString());
             plugin.Host.config["grid_overlap"] = num_overlap.Value.ToString();
-            MessageBox.Show(num_overlap.Value.ToString());
             plugin.Host.config["grid_sidelap"] = num_sidelap.Value.ToString();
-            MessageBox.Show(num_sidelap.Value.ToString());
             plugin.Host.config["grid_spacing"] = NUM_spacing.Value.ToString();
-            MessageBox.Show(NUM_spacing.Value.ToString());
-
             plugin.Host.config["grid_advanced"] = CHK_advanced.Checked.ToString();
-            MessageBox.Show(CHK_advanced.Checked.ToString());
+            
         }
 
         void AddDrawPolygon()
@@ -765,6 +757,60 @@ namespace SmartGridPlugin
                 tabControl1.TabPages.Remove(tabCamera);
                 tabControl1.TabPages.Remove(tabTrigger);
             }
+        }
+
+        public void aceptarSinPrevisualizar()
+        { 
+        if (grid != null && grid.Count > 0)
+            {
+                MissionPlanner.MainV2.instance.FlightPlanner.quickadd = true;
+
+                if (rad_trigdist.Checked)
+                {
+                    plugin.Host.AddWPtoList(MAVLink.MAV_CMD.DO_SET_CAM_TRIGG_DIST, (float)NUM_spacing.Value, 0, 0, 0, 0, 0, 0);
+                }
+
+                grid.ForEach(plla =>
+                {
+                    if (plla.Tag == "M")
+                    {
+                        if (rad_repeatservo.Checked)
+                        {
+                            plugin.Host.AddWPtoList(MAVLink.MAV_CMD.WAYPOINT, 0, 0, 0, 0, plla.Lng, plla.Lat, plla.Alt);
+                            plugin.Host.AddWPtoList(MAVLink.MAV_CMD.DO_REPEAT_SERVO, (float)num_reptservo.Value, (float)num_reptpwm.Value, 999, (float)num_repttime.Value, 0, 0, 0);
+                        }
+                        if (rad_digicam.Checked)
+                        {
+                            plugin.Host.AddWPtoList(MAVLink.MAV_CMD.WAYPOINT, 0, 0, 0, 0, plla.Lng, plla.Lat, plla.Alt);
+                            plugin.Host.AddWPtoList(MAVLink.MAV_CMD.DO_DIGICAM_CONTROL, 0, 0, 0, 0, 0, 0, 0);
+                        }
+                    }
+                    else
+                    {
+                        plugin.Host.AddWPtoList(MAVLink.MAV_CMD.WAYPOINT, 0, 0, 0, 0, plla.Lng, plla.Lat, plla.Alt);
+                    }
+                });
+
+                if (rad_trigdist.Checked)
+                {
+                    plugin.Host.AddWPtoList(MAVLink.MAV_CMD.DO_SET_CAM_TRIGG_DIST, 0, 0, 0, 0, 0, 0, 0);
+                }
+
+                savesettings();
+
+                MissionPlanner.MainV2.instance.FlightPlanner.quickadd = false;
+
+                MissionPlanner.MainV2.instance.FlightPlanner.writeKML();
+
+                
+            }
+            else
+            {
+                CustomMessageBox.Show("Bad Grid", "Error");
+            }
+        
+        
+        
         }
     }
 }

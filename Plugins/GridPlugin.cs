@@ -2,22 +2,26 @@
 using MissionPlanner.Utilities;
 using SmartGridPlugin;
 using System;
-using System;
-using System.Collections.Generic;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq;
 using System.Text;
-using System.Text;
-using System.Windows.Forms;
 using System.Windows.Forms;
 using GMap.NET;
 using GMap.NET.WindowsForms;
 
+/// <summary>
+/// El namespace del PlugIn
+/// </summary>
 namespace SmartGridPlugin
 {
+    /// <summary>
+    ///  La clase GridPlugin es una instancia de la clase estática Plugin de Mission Planner
+    /// </summary>
     public class GridPlugin : MissionPlanner.Plugin.Plugin
     {
+        /// <summary>
+        /// Instancia del Host, objeto que nos permite acceder a los datos de la aplicación principal (menús, polígonos dibujados, etc...)
+        /// </summary>
         public static MissionPlanner.Plugin.PluginHost Host2;
 
         /// <summary>
@@ -28,7 +32,7 @@ namespace SmartGridPlugin
         /// <summary>
         /// La version del plugin
         /// </summary>
-        string _Version = "0.1";
+        string _Version = "0.2";
        
         /// <summary>
         /// El autor del Plugin
@@ -64,7 +68,20 @@ namespace SmartGridPlugin
         /// </summary>
         ToolStripMenuItem but = new ToolStripMenuItem("SmartGrid by Hemav");
 
+        /// <summary>
+        /// La lista de los subpolígonos que se crearán a partir del polígono original
+        /// </summary>
          public List<GMapPolygon> listaPoligonos = new List<GMapPolygon>();
+
+         /// <summary>
+         /// Maneja la opción de mostrar o no mostrar cada una de las submisiones para configurarlas independientemente.
+         /// </summary>
+         public bool mostrarGridUI = false;
+
+         /// <summary>
+         /// Determina el nombre de la carpeta y las misiones
+         /// </summary>
+         public string nombreMision = "";
 
         public override bool Init()
         {
@@ -114,6 +131,7 @@ namespace SmartGridPlugin
         /// <param name="e"> e <see cref="EventArgs"/> Instancia con los datos del evento.</param>
         void but_Click(object sender, EventArgs e)
         {
+            // 
             if (Host.FPDrawnPolygon != null && Host.FPDrawnPolygon.Points.Count > 2)
             {
                 procesarPoligono();
@@ -125,91 +143,172 @@ namespace SmartGridPlugin
         }
 
         /// <summary>
-        /// Con el polígono dibujado y los parámetros de configuración, divide el polígono y muestra la división. Si no es correcta, permite reconfigurar y volver a dividir. 
+        /// Con el polígono dibujado y los parámetros de configuración, divide el polígono y muestra la división. Si no es correcta, permite reconfigurar y volver a dividir.
         /// Luego genera la ruta con el Grid
         /// </summary>
         void procesarPoligono()
         {
+            // Variable que determina si la división tiene la aprobación del usuario
             bool divisionCorrecta = false;
-
-
-            while (divisionCorrecta == false)
-            {
-                divisionCorrecta = ConfigurarDivision(divisionCorrecta); 
-            }
-
             
 
-            listaPoligonos.RemoveAt(0);
-            //LLamar a los Grids!
-            foreach (GMapPolygon poligono in listaPoligonos)
+            // Llamamos al configurador, que pide al usario unos parámetros y luego propone una solución. Si es correcta, continua el programa
+            while (divisionCorrecta == false)
             {
-               GridUI gridUI = new GridUI(this, poligono);
-                gridUI.ShowDialog();
+                divisionCorrecta = ConfigurarDivision();
+            }
+
+            listaPoligonos.RemoveAt(0);
+            // Llama  a los grids
+            for (int i = 0; i< listaPoligonos.Count() ; i++)
+			{
+
+                // En primer lugar escribimos un takeoff que varía en función de la plataforma
+                if (this.Host.cs.firmware == MissionPlanner.MainV2.Firmwares.ArduCopter2)
+                {
+                    this.Host.AddWPtoList(MAVLink.MAV_CMD.TAKEOFF, 0, 0, 0, 0, 0, 0, 30);
+                }
+                else
+                {
+                    this.Host.AddWPtoList(MAVLink.MAV_CMD.TAKEOFF, 20, 0, 0, 0, 0, 0, 30);
+                }
+
+
+                // Inicializamos un objeto GridUI
+               GridUI gridUI = new GridUI(this, listaPoligonos[i]);
+                // tan sólo se muestra la interfaz visual si así se ha requerido en la configuración
+                if (mostrarGridUI==true)
+                {gridUI.ShowDialog();}
+                // en caso contrario se acepta la misión con los parámetros especificados en el configurador
+                else
+                {gridUI.aceptarSinPrevisualizar();}
+
+                //Añadimos puntos de LANDING
+
+                if (this.Host.cs.firmware == MissionPlanner.MainV2.Firmwares.ArduCopter2)
+                {
+                    this.Host.AddWPtoList(MAVLink.MAV_CMD.LAND, 0, 0, 0, 0, 0, 0, 30);
+                }
+                else
+                {
+                    this.Host.AddWPtoList(MAVLink.MAV_CMD.LAND, 20, 0, 0, 0, 0, 0, 30);
+                }
+               
+                // Guardar cada uno de los poligonos como misión independiente
+                MissionPlanner.MainV2.instance.FlightPlanner.guardarMision(nombreMision,i);
+
+
+                // Actualizar KML
+                MissionPlanner.MainV2.instance.FlightPlanner.writeKML();
+
+                // Borramos los puntos de las misiones anteriores 
+                MissionPlanner.MainV2.instance.FlightPlanner.borrarMision();
 
             }
             
         }
 
-        private bool ConfigurarDivision(bool divisionCorrecta)
+        /// <summary>
+        /// Muestra un formulario que permite configurar el tipo de plataforma, payload y tipo de división de áreas
+        /// </summary>
+        /// <returns></returns>
+        private bool ConfigurarDivision()
         {
+            // Determina si debe volver a configurarse la división
+            bool divisionCorrecta;
+            bool divisionRecta;
+            // Limpiamos la lista de polígonos (por si no es la primera configuración)
             listaPoligonos.Clear();
-            listaPoligonos.Add(Host.FPDrawnPolygon);
+            // El primer polígono es siempre el original, dibujado por el usuario en la pestaña Mission PLanner
+            List<List<PointLatLng>> listaPuntosPoligonos = new List<List<PointLatLng>>();
+            // Se obtiene el área del polígono
             double areaPoligono = Utilidades.calcpolygonarea(Host.FPDrawnPolygon.Points)/10000;
+            //Se llama al configurador (ver SmartPluginConfigurador) Se pasa el area como parámetro
             SmartPluginConfigurador form = new SmartGridPlugin.SmartPluginConfigurador(areaPoligono);
             form.ShowDialog();
-
-            List<PointLatLng> listaPuntosPoligonoInicial = new List<PointLatLng>();
-            foreach (PointLatLng punto in Host.FPDrawnPolygon.Points)
+            mostrarGridUI = form.MostrarGridUI;
+            // Comprobamos si se ha elegido hacer división con recta o no
+            divisionRecta = form.DivisionRecta;
+            if (divisionRecta)
             {
-                listaPuntosPoligonoInicial.Add(punto);
+                RectaUI formularioRecta = new RectaUI(Host.FPDrawnPolygon);
+                formularioRecta.ShowDialog();
+                listaPuntosPoligonos.Clear();
+                listaPuntosPoligonos = formularioRecta.listaPuntosPoligonos;
+                formularioRecta.Dispose();
             }
-
-            switch (form.TipoDivision)
+           
+            if (divisionRecta)
             {
-                case 0: DivisionPoligono.divisionVertical(listaPuntosPoligonoInicial, listaPoligonos, decimal.ToDouble(form.AreaMaxima), decimal.ToDouble(form.DesplazamientoMaximo));
-                    break;
-                case 1: DivisionPoligono.divisionHorizontal(listaPuntosPoligonoInicial, listaPoligonos, decimal.ToDouble(form.AreaMaxima), decimal.ToDouble(form.DesplazamientoMaximo));
-                    break;
-                case 2: DivisionPoligono.divisionVertical(listaPuntosPoligonoInicial, listaPoligonos, decimal.ToDouble(form.AreaMaxima), decimal.ToDouble(form.DesplazamientoMaximo), form.Franjas);
-                    break;
-                case 3: DivisionPoligono.divisionHorizontal(listaPuntosPoligonoInicial, listaPoligonos, decimal.ToDouble(form.AreaMaxima), decimal.ToDouble(form.DesplazamientoMaximo), form.Franjas);
-                    break;
+                for (int i = 0; i < 2; i++)
+                {
+                    // Dependiendo del tipo de división se llama a uno u otro método
+                switch (form.TipoDivision)
+                {
+                    case 0: DivisionPoligono.divisionVertical(listaPuntosPoligonos[i], listaPoligonos, decimal.ToDouble(form.AreaMaxima), decimal.ToDouble(form.DesplazamientoMaximo));
+                        break;
+                    case 1: DivisionPoligono.divisionHorizontal(listaPuntosPoligonos[i], listaPoligonos, decimal.ToDouble(form.AreaMaxima), decimal.ToDouble(form.DesplazamientoMaximo));
+                        break;
+                    case 2: DivisionPoligono.divisionVertical(listaPuntosPoligonos[i], listaPoligonos, decimal.ToDouble(form.AreaMaxima), decimal.ToDouble(form.DesplazamientoMaximo), form.Franjas);
+                        break;
+                    case 3: DivisionPoligono.divisionHorizontal(listaPuntosPoligonos[i], listaPoligonos, decimal.ToDouble(form.AreaMaxima), decimal.ToDouble(form.DesplazamientoMaximo), form.Franjas);
+                        break;
+                }
+                }
             }
+            else
+            {
+                // Se crea una lista con los puntos del polígono original para que permanezca intacto
+                List<PointLatLng> listaPuntosPoligonoInicial = new List<PointLatLng>();
+                foreach (PointLatLng punto in Host.FPDrawnPolygon.Points)
+                {
+                    listaPuntosPoligonoInicial.Add(punto);
+                }
+                // Dependiendo del tipo de división se llama a uno u otro método
+                switch (form.TipoDivision)
+                {
+                    case 0: DivisionPoligono.divisionVertical(listaPuntosPoligonoInicial, listaPoligonos, decimal.ToDouble(form.AreaMaxima), decimal.ToDouble(form.DesplazamientoMaximo));
+                        break;
+                    case 1: DivisionPoligono.divisionHorizontal(listaPuntosPoligonoInicial, listaPoligonos, decimal.ToDouble(form.AreaMaxima), decimal.ToDouble(form.DesplazamientoMaximo));
+                        break;
+                    case 2: DivisionPoligono.divisionVertical(listaPuntosPoligonoInicial, listaPoligonos, decimal.ToDouble(form.AreaMaxima), decimal.ToDouble(form.DesplazamientoMaximo), form.Franjas);
+                        break;
+                    case 3: DivisionPoligono.divisionHorizontal(listaPuntosPoligonoInicial, listaPoligonos, decimal.ToDouble(form.AreaMaxima), decimal.ToDouble(form.DesplazamientoMaximo), form.Franjas);
+                        break;
+                }
+            }
+            
 
 
             // llamar a una ventana que nos muestre un mapa con los polígonos generados
 
             VistaPrevia vistaPrevia = new VistaPrevia(listaPoligonos);
             vistaPrevia.ShowDialog();
-
+            // Damos valor a la variable que controla el bucle
             divisionCorrecta = vistaPrevia.DivisionCorrecta;
 
+            // Si la división es correcta, se guardan los parámetros por defecto de los grids:
             if (divisionCorrecta)
             {
                 Host.config["grid_camera"] = form.Camara;
                 Host.config["grid_alt"] = form.Altura.ToString();
-                Host.config["grid_angle"] = "10";
+                Host.config["grid_angle"] = form.Angulo.ToString();
                 Host.config["grid_camdir"] = "True";
-
                 Host.config["grid_dist"] = "10";
                 Host.config["grid_overshoot1"] = form.OvershootHorizontal.ToString();
                 Host.config["grid_overshoot2"] = form.OvershootVertical.ToString();
                 Host.config["grid_overlap"] = form.Overlap.ToString();
                 Host.config["grid_sidelap"] = form.Sidelap.ToString();
-                Host.config["grid_spacing"] = "10";
-
-                Host.config["grid_startfrom"] = "Home";
-
+                Host.config["grid_startfrom"] = "BottomLeft";
                 Host.config["grid_advanced"] = "True";
-
+                nombreMision=form.NombreMision;
             }
-
+            
             return divisionCorrecta;
         }
 
         /// <summary>
-        /// Exit is only called on plugin unload. not app exit
+        /// Empleada al descargar el plugin
         /// </summary>
         /// <returns></returns>
         public override bool Exit()

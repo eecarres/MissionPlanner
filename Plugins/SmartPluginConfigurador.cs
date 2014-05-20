@@ -9,13 +9,38 @@ using System.Windows.Forms;
 
 namespace SmartGridPlugin
 {
+    /// <summary>
+    /// El formulario de configuración del PlugIn
+    /// </summary>
     public partial class SmartPluginConfigurador : Form
     {
 
         // Propiedades de la pestaña GRID
+        private bool divisionRecta = false;
+        public bool DivisionRecta
+        {
+            get { return divisionRecta; }
+        }
+        private string nombreMision = "";
+        public string NombreMision
+        {
+            get { return nombreMision; }
+        }
+        bool mostrarGridUI = false;
+        public bool MostrarGridUI
+        {
+            get { return mostrarGridUI; }
+        }
         private string plataforma = "";
         private string camara = "";
-        private int altura = 0;
+        private decimal altura = 150;
+        private decimal angulo = 0;
+
+        public decimal Angulo
+        {
+            get { return angulo; }
+        }
+
         private decimal overshootHorizontal = 0;
         public decimal OvershootHorizontal
         {
@@ -37,7 +62,7 @@ namespace SmartGridPlugin
             get { return sidelap; }
         }
 
-        public int Altura
+        public decimal Altura
         {
             get { return altura; }
         }
@@ -80,7 +105,10 @@ namespace SmartGridPlugin
             InitializeComponent();
             lblFranjas.Hide();
             numFranjas.Hide();
-            lblArea.Text = areaPoligono.ToString();
+            string textoArea = String.Format("{0:0.00}", areaPoligono);
+            lblArea.Text = textoArea + " Ha";
+            cmbCamara.SelectedIndex = 0;
+            cmbPlataforma.SelectedIndex = 0;
         }
 
         private void btnAceptar_Click(object sender, EventArgs e)
@@ -162,6 +190,26 @@ namespace SmartGridPlugin
         {
             franjas = decimal.ToInt16(numFranjas.Value);
             
+        }
+
+        private void chckMostrarGridUI_CheckedChanged(object sender, EventArgs e)
+        {
+            mostrarGridUI = chckMostrarGridUI.Checked;
+        }
+
+        private void numAngulo_ValueChanged(object sender, EventArgs e)
+        {
+            angulo = numAngulo.Value;
+        }
+
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+            nombreMision = txtNombreMision.Text;
+        }
+
+        private void chckRecta_CheckedChanged(object sender, EventArgs e)
+        {
+            divisionRecta = chckRecta.Checked;
         }
     }
 }

@@ -11,6 +11,9 @@ using System.Windows.Forms;
 
 namespace SmartGridPlugin
 {
+    /// <summary>
+    /// Estructura de datos creada para identificar una recta y sus parámetros de la ecuación en ejes cartesianos
+    /// </summary>
     public struct Recta
     {
         // Campos del struct
@@ -20,7 +23,12 @@ namespace SmartGridPlugin
        public double a, b;
         public PointF inicioF;
         public PointF finalF;
-        
+
+        /// <summary>
+        /// Inicializa una recta con dos puntos PointLatLng
+        /// </summary>
+        /// <param name="P1">Punto Inicial de la recta</param>
+        /// <param name="P2">Punto Final de la recta</param>
         public Recta(PointLatLng P1, PointLatLng P2)
         {
             this.puntoInicial = P1;
@@ -44,9 +52,12 @@ namespace SmartGridPlugin
         
         }
 
-
-
-
+        /// <summary>
+        /// Inicializa una recta con dos puntos UTM y la zona del primero de ellos
+        /// </summary>
+        /// <param name="P1">Punto Inicial de la recta</param>
+        /// <param name="P2">Punto Final de la recta</param>
+        /// <param name="utmzone">Zona UTM del primer punto</param>
         public Recta(double[] P1, double[] P2, int utmzone) 
         {
             this.punto1 = P1;

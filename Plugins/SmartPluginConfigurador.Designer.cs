@@ -48,6 +48,8 @@
             this.numAltura = new System.Windows.Forms.NumericUpDown();
             this.label12 = new System.Windows.Forms.Label();
             this.numAngulo = new System.Windows.Forms.NumericUpDown();
+            this.label16 = new System.Windows.Forms.Label();
+            this.chckMostrarGridUI = new System.Windows.Forms.CheckBox();
             this.tabDivisionAreas = new System.Windows.Forms.TabPage();
             this.numFranjas = new System.Windows.Forms.NumericUpDown();
             this.label13 = new System.Windows.Forms.Label();
@@ -59,9 +61,12 @@
             this.label9 = new System.Windows.Forms.Label();
             this.label10 = new System.Windows.Forms.Label();
             this.label11 = new System.Windows.Forms.Label();
-            this.btnAceptar = new System.Windows.Forms.Button();
-            this.label14 = new System.Windows.Forms.Label();
+            this.txtNombreMision = new System.Windows.Forms.TextBox();
+            this.label15 = new System.Windows.Forms.Label();
             this.lblArea = new System.Windows.Forms.Label();
+            this.label14 = new System.Windows.Forms.Label();
+            this.btnAceptar = new System.Windows.Forms.Button();
+            this.chckRecta = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -98,12 +103,14 @@
             // 
             // splitContainer1.Panel2
             // 
+            this.splitContainer1.Panel2.Controls.Add(this.txtNombreMision);
+            this.splitContainer1.Panel2.Controls.Add(this.label15);
             this.splitContainer1.Panel2.Controls.Add(this.lblArea);
             this.splitContainer1.Panel2.Controls.Add(this.label14);
             this.splitContainer1.Panel2.Controls.Add(this.btnAceptar);
             this.splitContainer1.Panel2MinSize = 5;
             this.splitContainer1.Size = new System.Drawing.Size(844, 624);
-            this.splitContainer1.SplitterDistance = 463;
+            this.splitContainer1.SplitterDistance = 500;
             this.splitContainer1.SplitterWidth = 5;
             this.splitContainer1.TabIndex = 1;
             // 
@@ -116,7 +123,7 @@
             this.tabControl1.Margin = new System.Windows.Forms.Padding(0);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(844, 463);
+            this.tabControl1.Size = new System.Drawing.Size(844, 500);
             this.tabControl1.TabIndex = 0;
             // 
             // tabGrid
@@ -127,7 +134,7 @@
             this.tabGrid.Margin = new System.Windows.Forms.Padding(4);
             this.tabGrid.Name = "tabGrid";
             this.tabGrid.Padding = new System.Windows.Forms.Padding(4);
-            this.tabGrid.Size = new System.Drawing.Size(836, 429);
+            this.tabGrid.Size = new System.Drawing.Size(836, 466);
             this.tabGrid.TabIndex = 0;
             this.tabGrid.Text = "Grid";
             // 
@@ -156,6 +163,8 @@
             this.tableLayoutPanel1.Controls.Add(this.numAltura, 2, 4);
             this.tableLayoutPanel1.Controls.Add(this.label12, 1, 3);
             this.tableLayoutPanel1.Controls.Add(this.numAngulo, 2, 3);
+            this.tableLayoutPanel1.Controls.Add(this.label16, 1, 9);
+            this.tableLayoutPanel1.Controls.Add(this.chckMostrarGridUI, 2, 9);
             this.tableLayoutPanel1.Location = new System.Drawing.Point(4, 4);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.RowCount = 10;
@@ -169,7 +178,7 @@
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 45F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 45F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 45F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(828, 421);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(828, 459);
             this.tableLayoutPanel1.TabIndex = 0;
             // 
             // cmbPlataforma
@@ -231,9 +240,8 @@
             // 
             this.cmbCamara.FormattingEnabled = true;
             this.cmbCamara.Items.AddRange(new object[] {
-            "GoPro 3+",
-            "Panasonic Lumix GH3",
-            "Sony NEX 7"});
+            "HEMAV GOPRO 3 BLACK",
+            "HEMAV HDWIN"});
             this.cmbCamara.Location = new System.Drawing.Point(352, 98);
             this.cmbCamara.Name = "cmbCamara";
             this.cmbCamara.Size = new System.Drawing.Size(271, 29);
@@ -375,10 +383,35 @@
             this.numAngulo.Name = "numAngulo";
             this.numAngulo.Size = new System.Drawing.Size(110, 28);
             this.numAngulo.TabIndex = 19;
+            this.numAngulo.ValueChanged += new System.EventHandler(this.numAngulo_ValueChanged);
+            // 
+            // label16
+            // 
+            this.label16.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
+            this.label16.AutoSize = true;
+            this.label16.Location = new System.Drawing.Point(139, 410);
+            this.label16.Name = "label16";
+            this.label16.Size = new System.Drawing.Size(161, 49);
+            this.label16.TabIndex = 21;
+            this.label16.Text = "Mostrar cada Grid";
+            // 
+            // chckMostrarGridUI
+            // 
+            this.chckMostrarGridUI.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.chckMostrarGridUI.AutoSize = true;
+            this.chckMostrarGridUI.Location = new System.Drawing.Point(605, 413);
+            this.chckMostrarGridUI.Name = "chckMostrarGridUI";
+            this.chckMostrarGridUI.Size = new System.Drawing.Size(18, 17);
+            this.chckMostrarGridUI.TabIndex = 22;
+            this.chckMostrarGridUI.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.chckMostrarGridUI.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
+            this.chckMostrarGridUI.UseVisualStyleBackColor = true;
+            this.chckMostrarGridUI.CheckedChanged += new System.EventHandler(this.chckMostrarGridUI_CheckedChanged);
             // 
             // tabDivisionAreas
             // 
             this.tabDivisionAreas.BackColor = System.Drawing.Color.DarkGray;
+            this.tabDivisionAreas.Controls.Add(this.chckRecta);
             this.tabDivisionAreas.Controls.Add(this.numFranjas);
             this.tabDivisionAreas.Controls.Add(this.label13);
             this.tabDivisionAreas.Controls.Add(this.lblFranjas);
@@ -393,7 +426,7 @@
             this.tabDivisionAreas.Margin = new System.Windows.Forms.Padding(4);
             this.tabDivisionAreas.Name = "tabDivisionAreas";
             this.tabDivisionAreas.Padding = new System.Windows.Forms.Padding(4);
-            this.tabDivisionAreas.Size = new System.Drawing.Size(836, 429);
+            this.tabDivisionAreas.Size = new System.Drawing.Size(836, 466);
             this.tabDivisionAreas.TabIndex = 1;
             this.tabDivisionAreas.Text = "Division de áreas";
             // 
@@ -548,9 +581,44 @@
             this.label11.TabIndex = 8;
             this.label11.Text = "Área máxima";
             // 
+            // txtNombreMision
+            // 
+            this.txtNombreMision.Location = new System.Drawing.Point(211, 66);
+            this.txtNombreMision.Name = "txtNombreMision";
+            this.txtNombreMision.Size = new System.Drawing.Size(355, 28);
+            this.txtNombreMision.TabIndex = 4;
+            this.txtNombreMision.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
+            // 
+            // label15
+            // 
+            this.label15.AutoSize = true;
+            this.label15.Location = new System.Drawing.Point(16, 65);
+            this.label15.Name = "label15";
+            this.label15.Size = new System.Drawing.Size(188, 24);
+            this.label15.TabIndex = 3;
+            this.label15.Text = "Nombre de la misión:";
+            // 
+            // lblArea
+            // 
+            this.lblArea.AutoSize = true;
+            this.lblArea.Location = new System.Drawing.Point(85, 23);
+            this.lblArea.Name = "lblArea";
+            this.lblArea.Size = new System.Drawing.Size(17, 24);
+            this.lblArea.TabIndex = 2;
+            this.lblArea.Text = "-";
+            // 
+            // label14
+            // 
+            this.label14.AutoSize = true;
+            this.label14.Location = new System.Drawing.Point(12, 23);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(56, 24);
+            this.label14.TabIndex = 1;
+            this.label14.Text = "Área:";
+            // 
             // btnAceptar
             // 
-            this.btnAceptar.Location = new System.Drawing.Point(670, 58);
+            this.btnAceptar.Location = new System.Drawing.Point(669, 43);
             this.btnAceptar.Margin = new System.Windows.Forms.Padding(4);
             this.btnAceptar.Name = "btnAceptar";
             this.btnAceptar.Size = new System.Drawing.Size(115, 50);
@@ -559,23 +627,16 @@
             this.btnAceptar.UseVisualStyleBackColor = true;
             this.btnAceptar.Click += new System.EventHandler(this.btnAceptar_Click);
             // 
-            // label14
+            // chckRecta
             // 
-            this.label14.AutoSize = true;
-            this.label14.Location = new System.Drawing.Point(25, 58);
-            this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(56, 24);
-            this.label14.TabIndex = 1;
-            this.label14.Text = "Área:";
-            // 
-            // lblArea
-            // 
-            this.lblArea.AutoSize = true;
-            this.lblArea.Location = new System.Drawing.Point(87, 58);
-            this.lblArea.Name = "lblArea";
-            this.lblArea.Size = new System.Drawing.Size(17, 24);
-            this.lblArea.TabIndex = 2;
-            this.lblArea.Text = "-";
+            this.chckRecta.AutoSize = true;
+            this.chckRecta.Location = new System.Drawing.Point(85, 318);
+            this.chckRecta.Name = "chckRecta";
+            this.chckRecta.Size = new System.Drawing.Size(207, 28);
+            this.chckRecta.TabIndex = 20;
+            this.chckRecta.Text = "Dividir usando Recta";
+            this.chckRecta.UseVisualStyleBackColor = true;
+            this.chckRecta.CheckedChanged += new System.EventHandler(this.chckRecta_CheckedChanged);
             // 
             // SmartPluginConfigurador
             // 
@@ -650,6 +711,11 @@
         private System.Windows.Forms.NumericUpDown numAngulo;
         private System.Windows.Forms.Label lblArea;
         private System.Windows.Forms.Label label14;
+        private System.Windows.Forms.Label label16;
+        private System.Windows.Forms.CheckBox chckMostrarGridUI;
+        private System.Windows.Forms.TextBox txtNombreMision;
+        private System.Windows.Forms.Label label15;
+        private System.Windows.Forms.CheckBox chckRecta;
 
     }
 }

@@ -13,15 +13,25 @@ using MissionPlanner.Utilities;
 
 namespace SmartGridPlugin
 {
+    /// <summary>
+    /// Divide el polígono con una recta definida por el usuario
+    /// </summary>
     class DivisorRecta
     {
-
+        /// <summary>
+        /// Lista de las rectas que forman el polígono
+        /// </summary>
         static public List<Recta> listaRectas = new List<Recta>();
 
+        /// <summary>
+        /// Puntos del primer polígono 
+        /// </summary>
         static public List<PointLatLng>listaPuntosPoligono1 = new List<PointLatLng>();
-        static public List<PointLatLng> listaPuntosPoligono2 = new List<PointLatLng>();
 
-        
+        /// <summary>
+        /// Puntos del segundo polígono
+        /// </summary>
+        static public List<PointLatLng> listaPuntosPoligono2 = new List<PointLatLng>();
 
         static public List<List<PointLatLng>> Separacion(List<PointLatLng> puntosPoligono, Recta rectaDivisoria, List<GMapPolygon> listaPoligono)
         {
@@ -29,13 +39,9 @@ namespace SmartGridPlugin
         
             // Asignamos el poligono inicial al array de poligonos:
 
-           
-
-
-
-
         //Encontramos las rectas que forman el polígono, y comprobamos cada una de las intersecciones.
-            
+            listaPuntosPoligono1.Clear();
+            listaPuntosPoligono2.Clear();
             int utmzone=Utilidades.ZonaUtm(puntosPoligono[0]);
 
             PointF puntoInterseccion1=PointF.Empty;

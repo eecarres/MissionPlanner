@@ -12,6 +12,9 @@ using GMap.NET;
 
 namespace SmartGridPlugin
 {
+    /// <summary>
+    /// Muestra la división tal cual está realizada con la configuración escogida
+    /// </summary>
     public partial class VistaPrevia : Form
     {
         bool divisionCorrecta = false;

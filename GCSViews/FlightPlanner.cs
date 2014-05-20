@@ -1299,7 +1299,7 @@ namespace MissionPlanner.GCSViews
         /// <summary>
         /// Saves a waypoint writer file
         /// </summary>
-        private void savewaypoints()
+        public void savewaypoints()
         {
             SaveFileDialog fd = new SaveFileDialog();
             fd.Filter = "Ardupilot Mission (*.txt)|*.*";
@@ -5685,6 +5685,78 @@ Column 1: Field type (RALLY is the only one at the moment -- may have RALLY_LAND
                 panelWaypoints.Dock = DockStyle.Right;
                 panelWaypoints.Width = this.Width / 2;
             }
+        }
+
+        //Funciones para el SmartGridPlugin
+
+        public void borrarMision()
+        {
+            quickadd = true;
+
+            // mono fix
+            Commands.CurrentCell = null;
+
+            Commands.Rows.Clear();
+
+            selectedrow = 0;
+            quickadd = false;
+            writeKML();
+        }
+
+        public void guardarMision(string nombreMision,int numSubMision)
+        {
+            DirectoryInfo di = new DirectoryInfo(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)+"\\Hemav Missions");
+            di.CreateSubdirectory(nombreMision);
+            
+        SaveFileDialog fd = new SaveFileDialog();
+            fd.Filter = "Ardupilot Mission (*.txt)|*.*";
+            fd.DefaultExt =".txt";
+            fd.FileName = nombreMision + "_" + numSubMision.ToString() + ".txt";
+            fd.RestoreDirectory = true;
+            fd.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\Hemav Missions\\"+nombreMision;
+
+            //FileStream fs = File.Create(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\Hemav Missions\\"+nombreMision +"\\"+ fd.FileName+".txt");
+            string file = (Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\Hemav Missions\\" + nombreMision + "\\" + fd.FileName + ".txt");
+
+        
+
+            if (file != "")
+            {
+                try
+                {
+                    StreamWriter sw = new StreamWriter(file);
+                    sw.WriteLine("QGC WPL 110");
+                    try
+                    {
+                        sw.WriteLine("0\t1\t0\t16\t0\t0\t0\t0\t" + double.Parse(TXT_homelat.Text).ToString("0.000000", new System.Globalization.CultureInfo("en-US")) + "\t" + double.Parse(TXT_homelng.Text).ToString("0.000000", new System.Globalization.CultureInfo("en-US")) + "\t" + double.Parse(TXT_homealt.Text).ToString("0.000000", new System.Globalization.CultureInfo("en-US")) + "\t1");
+                    }
+                    catch
+                    {
+                        sw.WriteLine("0\t1\t0\t0\t0\t0\t0\t0\t0\t0\t0\t1");
+                    }
+                    for (int a = 0; a < Commands.Rows.Count - 0; a++)
+                    {
+                        byte mode = (byte)(MAVLink.MAV_CMD)Enum.Parse(typeof(MAVLink.MAV_CMD), Commands.Rows[a].Cells[0].Value.ToString());
+
+                        sw.Write((a + 1)); // seq
+                        sw.Write("\t" + 0); // current
+                        sw.Write("\t" + (CHK_altmode.Checked == true ? (byte)MAVLink.MAV_FRAME.GLOBAL : (byte)MAVLink.MAV_FRAME.GLOBAL_RELATIVE_ALT)); //frame 
+                        sw.Write("\t" + mode);
+                        sw.Write("\t" + double.Parse(Commands.Rows[a].Cells[Param1.Index].Value.ToString()).ToString("0.000000", new System.Globalization.CultureInfo("en-US")));
+                        sw.Write("\t" + double.Parse(Commands.Rows[a].Cells[Param2.Index].Value.ToString()).ToString("0.000000", new System.Globalization.CultureInfo("en-US")));
+                        sw.Write("\t" + double.Parse(Commands.Rows[a].Cells[Param3.Index].Value.ToString()).ToString("0.000000", new System.Globalization.CultureInfo("en-US")));
+                        sw.Write("\t" + double.Parse(Commands.Rows[a].Cells[Param4.Index].Value.ToString()).ToString("0.000000", new System.Globalization.CultureInfo("en-US")));
+                        sw.Write("\t" + double.Parse(Commands.Rows[a].Cells[Lat.Index].Value.ToString()).ToString("0.000000", new System.Globalization.CultureInfo("en-US")));
+                        sw.Write("\t" + double.Parse(Commands.Rows[a].Cells[Lon.Index].Value.ToString()).ToString("0.000000", new System.Globalization.CultureInfo("en-US")));
+                        sw.Write("\t" + (double.Parse(Commands.Rows[a].Cells[Alt.Index].Value.ToString()) / MainV2.comPort.MAV.cs.multiplierdist).ToString("0.000000", new System.Globalization.CultureInfo("en-US")));
+                        sw.Write("\t" + 1);
+                        sw.WriteLine("");
+                    }
+                    sw.Close();
+                }
+                catch (Exception) { CustomMessageBox.Show("Error writing file"); }
+            }
+        
         }
     }
 }
