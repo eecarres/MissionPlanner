@@ -46,7 +46,14 @@ namespace SmartGridPlugin
 
         private void map_Click(object sender, EventArgs e)
         {
-           
+            
+            
+        }
+
+        private void map_MouseClick(object sender, MouseEventArgs e)
+        {
+    if (e.Button==MouseButtons.Left)
+            { 
                Point puntoPantalla = new Point(Cursor.Position.X, Cursor.Position.Y); // puntoPantalla es el punto en absolutas
                 puntoPantalla = map.PointToClient(puntoPantalla);
                 if (puntoRecta1.Lat == 0.0)
@@ -80,7 +87,7 @@ namespace SmartGridPlugin
                     listaPuntosPoligonos=DivisorRecta.Separacion(poligono.Points, rectaDivisoria, listaPoligono);
                     this.Close();
                 }
-
+            }
         }
     }
 }

@@ -266,7 +266,7 @@ namespace MissionPlanner
             log.Info("Mainv2 ctor");
 
             Form splash = Program.Splash;
-
+            splash.Text = "Hemav Planner";
             splash.Refresh();
 
             Application.DoEvents();
@@ -373,7 +373,7 @@ namespace MissionPlanner
             {
                 changelanguage(CultureInfoEx.GetCultureInfo((string)config["language"]));
             }
-
+           
             this.Text = splash.Text;
 
             if (!MONO) // windows only

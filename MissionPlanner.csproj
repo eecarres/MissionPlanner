@@ -111,7 +111,7 @@
     <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>mpdesktop.ico</ApplicationIcon>
+    <ApplicationIcon>HemavICON.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup />
   <PropertyGroup />
@@ -2428,6 +2428,7 @@
     <Content Include="FirmwareHistory.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="HemavICON.ico" />
     <Content Include="hud.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <SubType>Designer</SubType>
@@ -5924,6 +5925,7 @@
     <None Include="Resources\marker_05.png" />
     <None Include="Resources\marker_06.png" />
     <None Include="Resources\marker_07.png" />
+    <None Include="Resources\IconoHemav.jpg" />
     <Content Include="Resources\MAVCmd.zh-TW.txt" />
     <Content Include="Resources\MAVParam.zh-TW.txt" />
     <Content Include="Resources\new frames-01.png" />
@@ -5938,6 +5940,7 @@
     <None Include="Resources\pixhawk.jpg" />
     <Content Include="Resources\rover.png" />
     <Content Include="Resources\splash.jpg" />
+    <None Include="Resources\splashHemav.jpeg" />
     <Content Include="Scripts\datetime.py">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

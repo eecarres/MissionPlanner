@@ -158,7 +158,7 @@ namespace SmartGridPlugin
                 divisionCorrecta = ConfigurarDivision();
             }
 
-            listaPoligonos.RemoveAt(0);
+            //listaPoligonos.RemoveAt(0);
             // Llama  a los grids
             for (int i = 0; i< listaPoligonos.Count() ; i++)
 			{

@@ -58,6 +58,7 @@
             this.map.Zoom = 0D;
             this.map.Load += new System.EventHandler(this.map_Load);
             this.map.Click += new System.EventHandler(this.map_Click);
+            this.map.MouseClick += new System.Windows.Forms.MouseEventHandler(this.map_MouseClick);
             // 
             // RectaUI
             // 
