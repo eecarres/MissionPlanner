@@ -5906,6 +5906,7 @@
     <None Include="Resources\calibration06.jpg" />
     <None Include="Resources\calibration07.jpg" />
     <None Include="Resources\FW icons Y6.png" />
+    <None Include="Resources\BtnHemavBlanco.png" />
     <Content Include="Resources\guagebg.jpg" />
     <None Include="Resources\Hframe.png" />
     <None Include="Resources\Hframelight.png" />

@@ -48,9 +48,9 @@
             this.numAltura = new System.Windows.Forms.NumericUpDown();
             this.label12 = new System.Windows.Forms.Label();
             this.numAngulo = new System.Windows.Forms.NumericUpDown();
-            this.label16 = new System.Windows.Forms.Label();
             this.chckMostrarGridUI = new System.Windows.Forms.CheckBox();
             this.tabDivisionAreas = new System.Windows.Forms.TabPage();
+            this.chckRecta = new System.Windows.Forms.CheckBox();
             this.numFranjas = new System.Windows.Forms.NumericUpDown();
             this.label13 = new System.Windows.Forms.Label();
             this.lblFranjas = new System.Windows.Forms.Label();
@@ -66,7 +66,9 @@
             this.lblArea = new System.Windows.Forms.Label();
             this.label14 = new System.Windows.Forms.Label();
             this.btnAceptar = new System.Windows.Forms.Button();
-            this.chckRecta = new System.Windows.Forms.CheckBox();
+            this.label17 = new System.Windows.Forms.Label();
+            this.label16 = new System.Windows.Forms.Label();
+            this.chkAnguloOptimo = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -110,7 +112,7 @@
             this.splitContainer1.Panel2.Controls.Add(this.btnAceptar);
             this.splitContainer1.Panel2MinSize = 5;
             this.splitContainer1.Size = new System.Drawing.Size(844, 624);
-            this.splitContainer1.SplitterDistance = 500;
+            this.splitContainer1.SplitterDistance = 520;
             this.splitContainer1.SplitterWidth = 5;
             this.splitContainer1.TabIndex = 1;
             // 
@@ -123,7 +125,7 @@
             this.tabControl1.Margin = new System.Windows.Forms.Padding(0);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(844, 500);
+            this.tabControl1.Size = new System.Drawing.Size(844, 520);
             this.tabControl1.TabIndex = 0;
             // 
             // tabGrid
@@ -134,7 +136,7 @@
             this.tabGrid.Margin = new System.Windows.Forms.Padding(4);
             this.tabGrid.Name = "tabGrid";
             this.tabGrid.Padding = new System.Windows.Forms.Padding(4);
-            this.tabGrid.Size = new System.Drawing.Size(836, 466);
+            this.tabGrid.Size = new System.Drawing.Size(836, 486);
             this.tabGrid.TabIndex = 0;
             this.tabGrid.Text = "Grid";
             // 
@@ -163,12 +165,14 @@
             this.tableLayoutPanel1.Controls.Add(this.numAltura, 2, 4);
             this.tableLayoutPanel1.Controls.Add(this.label12, 1, 3);
             this.tableLayoutPanel1.Controls.Add(this.numAngulo, 2, 3);
-            this.tableLayoutPanel1.Controls.Add(this.label16, 1, 9);
             this.tableLayoutPanel1.Controls.Add(this.chckMostrarGridUI, 2, 9);
+            this.tableLayoutPanel1.Controls.Add(this.label17, 1, 9);
+            this.tableLayoutPanel1.Controls.Add(this.label16, 1, 10);
+            this.tableLayoutPanel1.Controls.Add(this.chkAnguloOptimo, 2, 10);
             this.tableLayoutPanel1.Location = new System.Drawing.Point(4, 4);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-            this.tableLayoutPanel1.RowCount = 10;
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 50F));
+            this.tableLayoutPanel1.RowCount = 11;
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 45F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 45F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 45F));
@@ -176,9 +180,11 @@
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 45F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 45F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 45F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 46F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 44F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 45F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 45F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(828, 459);
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(828, 479);
             this.tableLayoutPanel1.TabIndex = 0;
             // 
             // cmbPlataforma
@@ -189,7 +195,7 @@
             "Hemav-8",
             "Hemav Wings",
             "Hemav Pro"});
-            this.cmbPlataforma.Location = new System.Drawing.Point(352, 53);
+            this.cmbPlataforma.Location = new System.Drawing.Point(352, 33);
             this.cmbPlataforma.Name = "cmbPlataforma";
             this.cmbPlataforma.Size = new System.Drawing.Size(271, 29);
             this.cmbPlataforma.TabIndex = 2;
@@ -200,7 +206,7 @@
             // 
             this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(167, 50);
+            this.label1.Location = new System.Drawing.Point(167, 30);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(106, 45);
             this.label1.TabIndex = 3;
@@ -210,7 +216,7 @@
             // 
             this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(182, 95);
+            this.label2.Location = new System.Drawing.Point(182, 75);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(75, 45);
             this.label2.TabIndex = 4;
@@ -220,7 +226,7 @@
             // 
             this.label3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(169, 185);
+            this.label3.Location = new System.Drawing.Point(169, 165);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(101, 45);
             this.label3.TabIndex = 5;
@@ -230,7 +236,7 @@
             // 
             this.label4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(107, 230);
+            this.label4.Location = new System.Drawing.Point(107, 210);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(226, 45);
             this.label4.TabIndex = 6;
@@ -242,7 +248,7 @@
             this.cmbCamara.Items.AddRange(new object[] {
             "HEMAV GOPRO 3 BLACK",
             "HEMAV HDWIN"});
-            this.cmbCamara.Location = new System.Drawing.Point(352, 98);
+            this.cmbCamara.Location = new System.Drawing.Point(352, 78);
             this.cmbCamara.Name = "cmbCamara";
             this.cmbCamara.Size = new System.Drawing.Size(271, 29);
             this.cmbCamara.TabIndex = 7;
@@ -253,7 +259,7 @@
             // 
             this.label5.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(119, 275);
+            this.label5.Location = new System.Drawing.Point(119, 255);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(202, 45);
             this.label5.TabIndex = 10;
@@ -263,7 +269,7 @@
             // 
             this.label6.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(164, 320);
+            this.label6.Location = new System.Drawing.Point(164, 300);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(111, 45);
             this.label6.TabIndex = 11;
@@ -273,16 +279,16 @@
             // 
             this.label7.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(168, 365);
+            this.label7.Location = new System.Drawing.Point(168, 345);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(104, 45);
+            this.label7.Size = new System.Drawing.Size(104, 46);
             this.label7.TabIndex = 12;
             this.label7.Text = "Sidelap [%]";
             // 
             // numOvershootHorizontal
             // 
             this.numOvershootHorizontal.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.numOvershootHorizontal.Location = new System.Drawing.Point(513, 238);
+            this.numOvershootHorizontal.Location = new System.Drawing.Point(513, 218);
             this.numOvershootHorizontal.Maximum = new decimal(new int[] {
             999,
             0,
@@ -296,7 +302,7 @@
             // numOvershootVertical
             // 
             this.numOvershootVertical.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.numOvershootVertical.Location = new System.Drawing.Point(513, 283);
+            this.numOvershootVertical.Location = new System.Drawing.Point(513, 263);
             this.numOvershootVertical.Name = "numOvershootVertical";
             this.numOvershootVertical.Size = new System.Drawing.Size(110, 28);
             this.numOvershootVertical.TabIndex = 15;
@@ -311,7 +317,7 @@
             0,
             0,
             196608});
-            this.numOverlap.Location = new System.Drawing.Point(513, 328);
+            this.numOverlap.Location = new System.Drawing.Point(513, 308);
             this.numOverlap.Name = "numOverlap";
             this.numOverlap.Size = new System.Drawing.Size(110, 28);
             this.numOverlap.TabIndex = 16;
@@ -331,7 +337,7 @@
             0,
             0,
             65536});
-            this.numSidelap.Location = new System.Drawing.Point(513, 373);
+            this.numSidelap.Location = new System.Drawing.Point(513, 354);
             this.numSidelap.Name = "numSidelap";
             this.numSidelap.Size = new System.Drawing.Size(110, 28);
             this.numSidelap.TabIndex = 17;
@@ -345,7 +351,7 @@
             // numAltura
             // 
             this.numAltura.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.numAltura.Location = new System.Drawing.Point(513, 193);
+            this.numAltura.Location = new System.Drawing.Point(513, 173);
             this.numAltura.Maximum = new decimal(new int[] {
             1000000,
             0,
@@ -365,7 +371,7 @@
             // 
             this.label12.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
             this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(172, 140);
+            this.label12.Location = new System.Drawing.Point(172, 120);
             this.label12.Name = "label12";
             this.label12.Size = new System.Drawing.Size(96, 45);
             this.label12.TabIndex = 18;
@@ -374,7 +380,7 @@
             // numAngulo
             // 
             this.numAngulo.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.numAngulo.Location = new System.Drawing.Point(513, 148);
+            this.numAngulo.Location = new System.Drawing.Point(513, 128);
             this.numAngulo.Maximum = new decimal(new int[] {
             359,
             0,
@@ -385,21 +391,11 @@
             this.numAngulo.TabIndex = 19;
             this.numAngulo.ValueChanged += new System.EventHandler(this.numAngulo_ValueChanged);
             // 
-            // label16
-            // 
-            this.label16.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
-            this.label16.AutoSize = true;
-            this.label16.Location = new System.Drawing.Point(139, 410);
-            this.label16.Name = "label16";
-            this.label16.Size = new System.Drawing.Size(161, 49);
-            this.label16.TabIndex = 21;
-            this.label16.Text = "Mostrar cada Grid";
-            // 
             // chckMostrarGridUI
             // 
             this.chckMostrarGridUI.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.chckMostrarGridUI.AutoSize = true;
-            this.chckMostrarGridUI.Location = new System.Drawing.Point(605, 413);
+            this.chckMostrarGridUI.Location = new System.Drawing.Point(605, 394);
             this.chckMostrarGridUI.Name = "chckMostrarGridUI";
             this.chckMostrarGridUI.Size = new System.Drawing.Size(18, 17);
             this.chckMostrarGridUI.TabIndex = 22;
@@ -422,13 +418,24 @@
             this.tabDivisionAreas.Controls.Add(this.label9);
             this.tabDivisionAreas.Controls.Add(this.label10);
             this.tabDivisionAreas.Controls.Add(this.label11);
-            this.tabDivisionAreas.Location = new System.Drawing.Point(4, 30);
+            this.tabDivisionAreas.Location = new System.Drawing.Point(4, 25);
             this.tabDivisionAreas.Margin = new System.Windows.Forms.Padding(4);
             this.tabDivisionAreas.Name = "tabDivisionAreas";
             this.tabDivisionAreas.Padding = new System.Windows.Forms.Padding(4);
-            this.tabDivisionAreas.Size = new System.Drawing.Size(836, 466);
+            this.tabDivisionAreas.Size = new System.Drawing.Size(836, 471);
             this.tabDivisionAreas.TabIndex = 1;
             this.tabDivisionAreas.Text = "Division de áreas";
+            // 
+            // chckRecta
+            // 
+            this.chckRecta.AutoSize = true;
+            this.chckRecta.Location = new System.Drawing.Point(85, 318);
+            this.chckRecta.Name = "chckRecta";
+            this.chckRecta.Size = new System.Drawing.Size(207, 28);
+            this.chckRecta.TabIndex = 20;
+            this.chckRecta.Text = "Dividir usando Recta";
+            this.chckRecta.UseVisualStyleBackColor = true;
+            this.chckRecta.CheckedChanged += new System.EventHandler(this.chckRecta_CheckedChanged);
             // 
             // numFranjas
             // 
@@ -627,16 +634,40 @@
             this.btnAceptar.UseVisualStyleBackColor = true;
             this.btnAceptar.Click += new System.EventHandler(this.btnAceptar_Click);
             // 
-            // chckRecta
+            // label17
             // 
-            this.chckRecta.AutoSize = true;
-            this.chckRecta.Location = new System.Drawing.Point(85, 318);
-            this.chckRecta.Name = "chckRecta";
-            this.chckRecta.Size = new System.Drawing.Size(207, 28);
-            this.chckRecta.TabIndex = 20;
-            this.chckRecta.Text = "Dividir usando Recta";
-            this.chckRecta.UseVisualStyleBackColor = true;
-            this.chckRecta.CheckedChanged += new System.EventHandler(this.chckRecta_CheckedChanged);
+            this.label17.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
+            this.label17.AutoSize = true;
+            this.label17.Location = new System.Drawing.Point(139, 391);
+            this.label17.Name = "label17";
+            this.label17.Size = new System.Drawing.Size(161, 44);
+            this.label17.TabIndex = 23;
+            this.label17.Text = "Mostrar cada Grid";
+            // 
+            // label16
+            // 
+            this.label16.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
+            this.label16.AutoSize = true;
+            this.label16.Location = new System.Drawing.Point(117, 435);
+            this.label16.Name = "label16";
+            this.label16.Size = new System.Drawing.Size(206, 45);
+            this.label16.TabIndex = 24;
+            this.label16.Text = "Optimizar ángulo GRID";
+            // 
+            // chkAnguloOptimo
+            // 
+            this.chkAnguloOptimo.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.chkAnguloOptimo.AutoSize = true;
+            this.chkAnguloOptimo.Checked = true;
+            this.chkAnguloOptimo.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkAnguloOptimo.Location = new System.Drawing.Point(605, 438);
+            this.chkAnguloOptimo.Name = "chkAnguloOptimo";
+            this.chkAnguloOptimo.Size = new System.Drawing.Size(18, 17);
+            this.chkAnguloOptimo.TabIndex = 25;
+            this.chkAnguloOptimo.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.chkAnguloOptimo.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
+            this.chkAnguloOptimo.UseVisualStyleBackColor = true;
+            this.chkAnguloOptimo.CheckedChanged += new System.EventHandler(this.chkAnguloOptimo_CheckedChanged);
             // 
             // SmartPluginConfigurador
             // 
@@ -711,11 +742,13 @@
         private System.Windows.Forms.NumericUpDown numAngulo;
         private System.Windows.Forms.Label lblArea;
         private System.Windows.Forms.Label label14;
-        private System.Windows.Forms.Label label16;
         private System.Windows.Forms.CheckBox chckMostrarGridUI;
         private System.Windows.Forms.TextBox txtNombreMision;
         private System.Windows.Forms.Label label15;
         private System.Windows.Forms.CheckBox chckRecta;
+        private System.Windows.Forms.Label label17;
+        private System.Windows.Forms.Label label16;
+        private System.Windows.Forms.CheckBox chkAnguloOptimo;
 
     }
 }

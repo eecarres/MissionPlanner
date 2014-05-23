@@ -14,8 +14,14 @@ namespace SmartGridPlugin
     /// </summary>
     public partial class SmartPluginConfigurador : Form
     {
+        GridPlugin plugin;
 
         // Propiedades de la pestaña GRID
+        private bool anguloOptimo = true;
+        public bool AnguloOptimo
+        {
+            get { return anguloOptimo; }
+        }
         private bool divisionRecta = false;
         public bool DivisionRecta
         {
@@ -100,7 +106,7 @@ namespace SmartGridPlugin
 
 
           // Métodos del plugin  
-        public SmartPluginConfigurador(double areaPoligono)
+        public SmartPluginConfigurador(double areaPoligono,GridPlugin gridPlugin)
         {
             InitializeComponent();
             lblFranjas.Hide();
@@ -109,6 +115,8 @@ namespace SmartGridPlugin
             lblArea.Text = textoArea + " Ha";
             cmbCamara.SelectedIndex = 0;
             cmbPlataforma.SelectedIndex = 0;
+            numAngulo.Enabled = false;
+            plugin = gridPlugin;
         }
 
         private void btnAceptar_Click(object sender, EventArgs e)
@@ -211,5 +219,66 @@ namespace SmartGridPlugin
         {
             divisionRecta = chckRecta.Checked;
         }
+
+        private void chkAnguloOptimo_CheckedChanged(object sender, EventArgs e)
+        {
+            anguloOptimo = chkAnguloOptimo.Checked;
+            if (anguloOptimo)
+            {
+                numAngulo.Enabled = false;
+            }
+            else
+            {
+                numAngulo.Enabled = true;
+            }
+
+        }
+
+
+        void loadsettings()
+        {
+            if (plugin.Host.config.ContainsKey("grid_camera"))
+            {
+                loadsetting("grid_alt",numAltura );
+                loadsetting("grid_angle", numAngulo);
+                loadsetting("grid_overshoot1", numOvershootHorizontal);
+                loadsetting("grid_overshoot2", numOvershootVertical);
+                loadsetting("grid_overlap", numOverlap);
+                loadsetting("grid_sidelap", numSidelap);
+                // camera last to it invokes a reload
+                loadsetting("grid_camera", cmbCamara);
+
+            }
+        }
+
+        void loadsetting(string key, Control item)
+        {
+            if (plugin.Host.config.ContainsKey(key))
+            {
+                if (item is NumericUpDown)
+                {
+                    ((NumericUpDown)item).Value = decimal.Parse(plugin.Host.config[key].ToString());
+                }
+                else if (item is ComboBox)
+                {
+                    ((ComboBox)item).Text = plugin.Host.config[key].ToString();
+                }
+                else if (item is CheckBox)
+                {
+                    ((CheckBox)item).Checked = bool.Parse(plugin.Host.config[key].ToString());
+                }
+                else if (item is RadioButton)
+                {
+                    ((RadioButton)item).Checked = bool.Parse(plugin.Host.config[key].ToString());
+                }
+            }
+        }
+
+
+
+
+
+
+
     }
 }

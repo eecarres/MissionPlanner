@@ -19,6 +19,7 @@ using log4net;
 using MissionPlanner.Utilities;
 using ProjNet.CoordinateSystems;
 using ProjNet.CoordinateSystems.Transformations;
+using MissionPlanner.Utilities;
 
 namespace SmartGridPlugin
 {
@@ -174,6 +175,7 @@ namespace SmartGridPlugin
 
             poligonoInicial.Points.ForEach(x => { list.Add(x); });
 
+          
             grid = Grid.CreateGrid(list, (double)NUM_altitude.Value, (double)NUM_Distance.Value, (double)NUM_spacing.Value, (double)NUM_angle.Value, (double)NUM_overshoot.Value, (double)NUM_overshoot2.Value, (Grid.StartPosition)Enum.Parse(typeof(Grid.StartPosition), CMB_startfrom.Text), false);
 
             List<PointLatLng> list2 = new List<PointLatLng>();
