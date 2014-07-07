@@ -57,6 +57,9 @@ namespace SmartGridPlugin
 
             InitializeComponent();
 
+            groupBox5.Visible = false;
+            tabControl1.Visible = false;
+
             poligonoInicial = poligono;
             map.MapProvider = plugin.Host.FDMapType;
 
@@ -813,6 +816,30 @@ namespace SmartGridPlugin
         
         
         
+        }
+
+        private void checkBox1_CheckedChanged(object sender, EventArgs e)
+        {
+            if (checkBox1.Checked)
+            {
+                groupBox5.Visible = true;
+            }
+            else
+                groupBox5.Visible = false;
+            
+        }
+
+        private void checkBox2_CheckedChanged(object sender, EventArgs e)
+        {
+            {
+                if (checkBox2.Checked)
+                {
+                    tabControl1.Visible = true;
+                }
+                else
+                    tabControl1.Visible = false;
+
+            }
         }
     }
 }

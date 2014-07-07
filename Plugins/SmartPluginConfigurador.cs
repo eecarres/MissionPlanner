@@ -83,7 +83,7 @@ namespace SmartGridPlugin
         
         // Propiedades de la pestaña Division de  areas
 
-        private decimal areaMaxima = 30;
+        private decimal areaMaxima = 35;
         public decimal AreaMaxima
         {
             get { return areaMaxima; }

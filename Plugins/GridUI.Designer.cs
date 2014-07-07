@@ -50,6 +50,7 @@ namespace SmartGridPlugin
             this.label1 = new System.Windows.Forms.Label();
             this.NUM_altitude = new System.Windows.Forms.NumericUpDown();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.BUT_samplephoto = new MissionPlanner.Controls.MyButton();
             this.label21 = new System.Windows.Forms.Label();
             this.label19 = new System.Windows.Forms.Label();
             this.label20 = new System.Windows.Forms.Label();
@@ -67,7 +68,7 @@ namespace SmartGridPlugin
             this.label14 = new System.Windows.Forms.Label();
             this.label13 = new System.Windows.Forms.Label();
             this.label11 = new System.Windows.Forms.Label();
-            this.CHK_camdirection = new System.Windows.Forms.CheckBox();
+            this.BUT_save = new MissionPlanner.Controls.MyButton();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.label18 = new System.Windows.Forms.Label();
             this.label17 = new System.Windows.Forms.Label();
@@ -92,6 +93,7 @@ namespace SmartGridPlugin
             this.chk_grid = new System.Windows.Forms.CheckBox();
             this.chk_markers = new System.Windows.Forms.CheckBox();
             this.chk_boundary = new System.Windows.Forms.CheckBox();
+            this.BUT_Accept = new MissionPlanner.Controls.MyButton();
             this.tabGrid = new System.Windows.Forms.TabPage();
             this.tabTrigger = new System.Windows.Forms.TabPage();
             this.tabCamera = new System.Windows.Forms.TabPage();
@@ -117,9 +119,9 @@ namespace SmartGridPlugin
             this.label23 = new System.Windows.Forms.Label();
             this.label22 = new System.Windows.Forms.Label();
             this.map = new MissionPlanner.Controls.myGMAP();
-            this.BUT_Accept = new MissionPlanner.Controls.MyButton();
-            this.BUT_samplephoto = new MissionPlanner.Controls.MyButton();
-            this.BUT_save = new MissionPlanner.Controls.MyButton();
+            this.checkBox1 = new System.Windows.Forms.CheckBox();
+            this.checkBox2 = new System.Windows.Forms.CheckBox();
+            this.CHK_camdirection = new System.Windows.Forms.CheckBox();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.NUM_spacing)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.NUM_overshoot2)).BeginInit();
@@ -149,6 +151,7 @@ namespace SmartGridPlugin
             // groupBox1
             // 
             resources.ApplyResources(this.groupBox1, "groupBox1");
+            this.groupBox1.BackColor = System.Drawing.Color.DarkGray;
             this.groupBox1.Controls.Add(this.label3);
             this.groupBox1.Controls.Add(this.NUM_spacing);
             this.groupBox1.Controls.Add(this.label7);
@@ -358,6 +361,17 @@ namespace SmartGridPlugin
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.TabStop = false;
             // 
+            // BUT_samplephoto
+            // 
+            this.BUT_samplephoto.BGGradBot = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
+            this.BUT_samplephoto.BGGradTop = System.Drawing.Color.Red;
+            resources.ApplyResources(this.BUT_samplephoto, "BUT_samplephoto");
+            this.BUT_samplephoto.Name = "BUT_samplephoto";
+            this.BUT_samplephoto.Outline = System.Drawing.Color.Maroon;
+            this.BUT_samplephoto.TextColor = System.Drawing.Color.White;
+            this.BUT_samplephoto.UseVisualStyleBackColor = true;
+            this.BUT_samplephoto.Click += new System.EventHandler(this.BUT_samplephoto_Click);
+            // 
             // label21
             // 
             resources.ApplyResources(this.label21, "label21");
@@ -469,14 +483,16 @@ namespace SmartGridPlugin
             resources.ApplyResources(this.label11, "label11");
             this.label11.Name = "label11";
             // 
-            // CHK_camdirection
+            // BUT_save
             // 
-            resources.ApplyResources(this.CHK_camdirection, "CHK_camdirection");
-            this.CHK_camdirection.Checked = true;
-            this.CHK_camdirection.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.CHK_camdirection.Name = "CHK_camdirection";
-            this.CHK_camdirection.UseVisualStyleBackColor = true;
-            this.CHK_camdirection.CheckedChanged += new System.EventHandler(this.CHK_camdirection_CheckedChanged);
+            this.BUT_save.BGGradBot = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
+            this.BUT_save.BGGradTop = System.Drawing.Color.Red;
+            resources.ApplyResources(this.BUT_save, "BUT_save");
+            this.BUT_save.Name = "BUT_save";
+            this.BUT_save.Outline = System.Drawing.Color.Maroon;
+            this.BUT_save.TextColor = System.Drawing.Color.White;
+            this.BUT_save.UseVisualStyleBackColor = true;
+            this.BUT_save.Click += new System.EventHandler(this.BUT_save_Click);
             // 
             // groupBox3
             // 
@@ -598,12 +614,12 @@ namespace SmartGridPlugin
             // 
             // tabSimple
             // 
+            this.tabSimple.BackColor = System.Drawing.Color.DarkGray;
             this.tabSimple.Controls.Add(this.groupBox6);
             this.tabSimple.Controls.Add(this.groupBox4);
             this.tabSimple.Controls.Add(this.BUT_Accept);
             resources.ApplyResources(this.tabSimple, "tabSimple");
             this.tabSimple.Name = "tabSimple";
-            this.tabSimple.UseVisualStyleBackColor = true;
             // 
             // groupBox6
             // 
@@ -713,29 +729,41 @@ namespace SmartGridPlugin
             this.chk_boundary.UseVisualStyleBackColor = true;
             this.chk_boundary.CheckedChanged += new System.EventHandler(this.domainUpDown1_ValueChanged);
             // 
+            // BUT_Accept
+            // 
+            this.BUT_Accept.BGGradBot = System.Drawing.Color.Maroon;
+            this.BUT_Accept.BGGradTop = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
+            resources.ApplyResources(this.BUT_Accept, "BUT_Accept");
+            this.BUT_Accept.Name = "BUT_Accept";
+            this.BUT_Accept.Outline = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(128)))));
+            this.BUT_Accept.TextColor = System.Drawing.Color.White;
+            this.BUT_Accept.UseVisualStyleBackColor = true;
+            this.BUT_Accept.Click += new System.EventHandler(this.BUT_Accept_Click);
+            // 
             // tabGrid
             // 
+            this.tabGrid.BackColor = System.Drawing.SystemColors.GrayText;
             this.tabGrid.Controls.Add(this.groupBox1);
             resources.ApplyResources(this.tabGrid, "tabGrid");
             this.tabGrid.Name = "tabGrid";
-            this.tabGrid.UseVisualStyleBackColor = true;
             // 
             // tabTrigger
             // 
+            this.tabTrigger.BackColor = System.Drawing.Color.DarkGray;
             this.tabTrigger.Controls.Add(this.groupBox3);
             resources.ApplyResources(this.tabTrigger, "tabTrigger");
             this.tabTrigger.Name = "tabTrigger";
-            this.tabTrigger.UseVisualStyleBackColor = true;
             // 
             // tabCamera
             // 
+            this.tabCamera.BackColor = System.Drawing.Color.DarkGray;
             this.tabCamera.Controls.Add(this.groupBox2);
             resources.ApplyResources(this.tabCamera, "tabCamera");
             this.tabCamera.Name = "tabCamera";
-            this.tabCamera.UseVisualStyleBackColor = true;
             // 
             // groupBox5
             // 
+            this.groupBox5.BackColor = System.Drawing.SystemColors.ControlDark;
             this.groupBox5.Controls.Add(this.label32);
             this.groupBox5.Controls.Add(this.label35);
             this.groupBox5.Controls.Add(this.label28);
@@ -829,7 +857,6 @@ namespace SmartGridPlugin
             // 
             resources.ApplyResources(this.label29, "label29");
             this.label29.Name = "label29";
-           
             // 
             // lbl_spacing
             // 
@@ -860,7 +887,6 @@ namespace SmartGridPlugin
             // 
             resources.ApplyResources(this.label22, "label22");
             this.label22.Name = "label22";
-            
             // 
             // map
             // 
@@ -885,31 +911,35 @@ namespace SmartGridPlugin
             this.map.ShowTileGridLines = false;
             this.map.Zoom = 3D;
             // 
-            // BUT_Accept
+            // checkBox1
             // 
-            resources.ApplyResources(this.BUT_Accept, "BUT_Accept");
-            this.BUT_Accept.Name = "BUT_Accept";
-            this.BUT_Accept.UseVisualStyleBackColor = true;
-            this.BUT_Accept.Click += new System.EventHandler(this.BUT_Accept_Click);
+            resources.ApplyResources(this.checkBox1, "checkBox1");
+            this.checkBox1.Name = "checkBox1";
+            this.checkBox1.UseVisualStyleBackColor = true;
+            this.checkBox1.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
             // 
-            // BUT_samplephoto
+            // checkBox2
             // 
-            resources.ApplyResources(this.BUT_samplephoto, "BUT_samplephoto");
-            this.BUT_samplephoto.Name = "BUT_samplephoto";
-            this.BUT_samplephoto.UseVisualStyleBackColor = true;
-            this.BUT_samplephoto.Click += new System.EventHandler(this.BUT_samplephoto_Click);
+            resources.ApplyResources(this.checkBox2, "checkBox2");
+            this.checkBox2.Name = "checkBox2";
+            this.checkBox2.UseVisualStyleBackColor = true;
+            this.checkBox2.CheckedChanged += new System.EventHandler(this.checkBox2_CheckedChanged);
             // 
-            // BUT_save
+            // CHK_camdirection
             // 
-            resources.ApplyResources(this.BUT_save, "BUT_save");
-            this.BUT_save.Name = "BUT_save";
-            this.BUT_save.UseVisualStyleBackColor = true;
-            this.BUT_save.Click += new System.EventHandler(this.BUT_save_Click);
+            resources.ApplyResources(this.CHK_camdirection, "CHK_camdirection");
+            this.CHK_camdirection.Checked = true;
+            this.CHK_camdirection.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.CHK_camdirection.Name = "CHK_camdirection";
+            this.CHK_camdirection.UseVisualStyleBackColor = true;
+            this.CHK_camdirection.CheckedChanged += new System.EventHandler(this.CHK_camdirection_CheckedChanged);
             // 
             // GridUI
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             resources.ApplyResources(this, "$this");
+            this.Controls.Add(this.checkBox2);
+            this.Controls.Add(this.checkBox1);
             this.Controls.Add(this.map);
             this.Controls.Add(this.groupBox5);
             this.Controls.Add(this.tabControl1);
@@ -947,6 +977,7 @@ namespace SmartGridPlugin
             this.groupBox5.ResumeLayout(false);
             this.groupBox5.PerformLayout();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -979,7 +1010,6 @@ namespace SmartGridPlugin
         private System.Windows.Forms.TextBox TXT_imgheight;
         private System.Windows.Forms.TextBox TXT_imgwidth;
         private System.Windows.Forms.NumericUpDown num_focallength;
-        private System.Windows.Forms.CheckBox CHK_camdirection;
         private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.NumericUpDown num_reptpwm;
         private System.Windows.Forms.NumericUpDown num_reptservo;
@@ -1042,5 +1072,8 @@ namespace SmartGridPlugin
         private System.Windows.Forms.Label label31;
         private System.Windows.Forms.Label label32;
         private System.Windows.Forms.Label label35;
+        private System.Windows.Forms.CheckBox checkBox1;
+        private System.Windows.Forms.CheckBox checkBox2;
+        private System.Windows.Forms.CheckBox CHK_camdirection;
     }
 }

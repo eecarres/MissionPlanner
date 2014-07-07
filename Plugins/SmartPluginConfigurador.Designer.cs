@@ -49,6 +49,9 @@
             this.label12 = new System.Windows.Forms.Label();
             this.numAngulo = new System.Windows.Forms.NumericUpDown();
             this.chckMostrarGridUI = new System.Windows.Forms.CheckBox();
+            this.label17 = new System.Windows.Forms.Label();
+            this.label16 = new System.Windows.Forms.Label();
+            this.chkAnguloOptimo = new System.Windows.Forms.CheckBox();
             this.tabDivisionAreas = new System.Windows.Forms.TabPage();
             this.chckRecta = new System.Windows.Forms.CheckBox();
             this.numFranjas = new System.Windows.Forms.NumericUpDown();
@@ -66,9 +69,6 @@
             this.lblArea = new System.Windows.Forms.Label();
             this.label14 = new System.Windows.Forms.Label();
             this.btnAceptar = new System.Windows.Forms.Button();
-            this.label17 = new System.Windows.Forms.Label();
-            this.label16 = new System.Windows.Forms.Label();
-            this.chkAnguloOptimo = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -404,6 +404,41 @@
             this.chckMostrarGridUI.UseVisualStyleBackColor = true;
             this.chckMostrarGridUI.CheckedChanged += new System.EventHandler(this.chckMostrarGridUI_CheckedChanged);
             // 
+            // label17
+            // 
+            this.label17.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
+            this.label17.AutoSize = true;
+            this.label17.Location = new System.Drawing.Point(139, 391);
+            this.label17.Name = "label17";
+            this.label17.Size = new System.Drawing.Size(161, 44);
+            this.label17.TabIndex = 23;
+            this.label17.Text = "Mostrar cada Grid";
+            // 
+            // label16
+            // 
+            this.label16.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
+            this.label16.AutoSize = true;
+            this.label16.Location = new System.Drawing.Point(117, 435);
+            this.label16.Name = "label16";
+            this.label16.Size = new System.Drawing.Size(206, 45);
+            this.label16.TabIndex = 24;
+            this.label16.Text = "Optimizar ángulo GRID";
+            // 
+            // chkAnguloOptimo
+            // 
+            this.chkAnguloOptimo.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.chkAnguloOptimo.AutoSize = true;
+            this.chkAnguloOptimo.Checked = true;
+            this.chkAnguloOptimo.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkAnguloOptimo.Location = new System.Drawing.Point(605, 438);
+            this.chkAnguloOptimo.Name = "chkAnguloOptimo";
+            this.chkAnguloOptimo.Size = new System.Drawing.Size(18, 17);
+            this.chkAnguloOptimo.TabIndex = 25;
+            this.chkAnguloOptimo.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.chkAnguloOptimo.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
+            this.chkAnguloOptimo.UseVisualStyleBackColor = true;
+            this.chkAnguloOptimo.CheckedChanged += new System.EventHandler(this.chkAnguloOptimo_CheckedChanged);
+            // 
             // tabDivisionAreas
             // 
             this.tabDivisionAreas.BackColor = System.Drawing.Color.DarkGray;
@@ -418,11 +453,11 @@
             this.tabDivisionAreas.Controls.Add(this.label9);
             this.tabDivisionAreas.Controls.Add(this.label10);
             this.tabDivisionAreas.Controls.Add(this.label11);
-            this.tabDivisionAreas.Location = new System.Drawing.Point(4, 25);
+            this.tabDivisionAreas.Location = new System.Drawing.Point(4, 30);
             this.tabDivisionAreas.Margin = new System.Windows.Forms.Padding(4);
             this.tabDivisionAreas.Name = "tabDivisionAreas";
             this.tabDivisionAreas.Padding = new System.Windows.Forms.Padding(4);
-            this.tabDivisionAreas.Size = new System.Drawing.Size(836, 471);
+            this.tabDivisionAreas.Size = new System.Drawing.Size(836, 486);
             this.tabDivisionAreas.TabIndex = 1;
             this.tabDivisionAreas.Text = "Division de áreas";
             // 
@@ -526,7 +561,7 @@
             this.numAreaMaxima.Size = new System.Drawing.Size(64, 28);
             this.numAreaMaxima.TabIndex = 15;
             this.numAreaMaxima.Value = new decimal(new int[] {
-            30,
+            35,
             0,
             0,
             0});
@@ -633,41 +668,6 @@
             this.btnAceptar.Text = "Aceptar";
             this.btnAceptar.UseVisualStyleBackColor = true;
             this.btnAceptar.Click += new System.EventHandler(this.btnAceptar_Click);
-            // 
-            // label17
-            // 
-            this.label17.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
-            this.label17.AutoSize = true;
-            this.label17.Location = new System.Drawing.Point(139, 391);
-            this.label17.Name = "label17";
-            this.label17.Size = new System.Drawing.Size(161, 44);
-            this.label17.TabIndex = 23;
-            this.label17.Text = "Mostrar cada Grid";
-            // 
-            // label16
-            // 
-            this.label16.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
-            this.label16.AutoSize = true;
-            this.label16.Location = new System.Drawing.Point(117, 435);
-            this.label16.Name = "label16";
-            this.label16.Size = new System.Drawing.Size(206, 45);
-            this.label16.TabIndex = 24;
-            this.label16.Text = "Optimizar ángulo GRID";
-            // 
-            // chkAnguloOptimo
-            // 
-            this.chkAnguloOptimo.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.chkAnguloOptimo.AutoSize = true;
-            this.chkAnguloOptimo.Checked = true;
-            this.chkAnguloOptimo.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkAnguloOptimo.Location = new System.Drawing.Point(605, 438);
-            this.chkAnguloOptimo.Name = "chkAnguloOptimo";
-            this.chkAnguloOptimo.Size = new System.Drawing.Size(18, 17);
-            this.chkAnguloOptimo.TabIndex = 25;
-            this.chkAnguloOptimo.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.chkAnguloOptimo.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
-            this.chkAnguloOptimo.UseVisualStyleBackColor = true;
-            this.chkAnguloOptimo.CheckedChanged += new System.EventHandler(this.chkAnguloOptimo_CheckedChanged);
             // 
             // SmartPluginConfigurador
             // 

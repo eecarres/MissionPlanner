@@ -218,7 +218,7 @@ namespace SmartGridPlugin
                     barraProgreso.Dispose();
                     string mensaje=("Creado el polígono número"+(i+1)+" , con rumbo "+valorAnguloOptimo+"º");
                     MessageBox.Show(mensaje);
-                    Host.config["grid_angle"] = valorAnguloOptimo;
+                    Host.config["grid_angle"] = (double)valorAnguloOptimo;
                 }
 
                 // En primer lugar escribimos un takeoff que varía en función de la plataforma
