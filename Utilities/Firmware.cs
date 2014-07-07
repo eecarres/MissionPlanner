@@ -56,6 +56,7 @@ namespace MissionPlanner.Utilities
             public string urlvrbrainv50;
             public string urlvrbrainv51;
             public string urlvrherov10;
+            public string urlvrubrainv51;
             public string name;
             public string desc;
             public int k_format_version;
@@ -163,6 +164,7 @@ namespace MissionPlanner.Utilities
             string vrbrainv50 = "";
             string vrbrainv51 = "";
             string vrherov10 = "";
+            string vrubrainv51 = "";
             string name = "";
             string desc = "";
             int k_format_version = 0;
@@ -217,6 +219,9 @@ namespace MissionPlanner.Utilities
                             case "urlvrherov10":
                                 vrherov10 = xmlreader.ReadString();
                                 break;
+                            case "urlvrubrainv51":
+                                vrubrainv51 = xmlreader.ReadString();
+                                break;
                             case "name":
                                 name = xmlreader.ReadString();
                                 break;
@@ -241,6 +246,7 @@ namespace MissionPlanner.Utilities
                                     temp.urlvrbrainv50 = vrbrainv50;
                                     temp.urlvrbrainv51 = vrbrainv51;
                                     temp.urlvrherov10 = vrherov10;
+                                    temp.urlvrubrainv51 = vrubrainv51;
                                     temp.k_format_version = k_format_version;
 
                                     try
@@ -278,6 +284,7 @@ namespace MissionPlanner.Utilities
                                 vrbrainv50 = "";
                                 vrbrainv51 = "";
                                 vrherov10 = "";
+                                vrubrainv51 = "";
                                 name = "";
                                 desc = "";
                                 k_format_version = 0;
@@ -411,7 +418,7 @@ namespace MissionPlanner.Utilities
 
                 int apmformat_version = -1; // fail continue
 
-                if (board != BoardDetect.boards.px4 && board != BoardDetect.boards.px4v2 && board != BoardDetect.boards.vrbrainv40 && board != BoardDetect.boards.vrbrainv45 && board != BoardDetect.boards.vrbrainv50 && board != BoardDetect.boards.vrbrainv51 && board != BoardDetect.boards.vrherov10)
+                if (board != BoardDetect.boards.px4 && board != BoardDetect.boards.px4v2 && board != BoardDetect.boards.vrbrainv40 && board != BoardDetect.boards.vrbrainv45 && board != BoardDetect.boards.vrbrainv50 && board != BoardDetect.boards.vrbrainv51 && board != BoardDetect.boards.vrherov10 && board != BoardDetect.boards.vrubrainv51)
                 {
                     try
                     {
@@ -475,6 +482,10 @@ namespace MissionPlanner.Utilities
                 else if (board == BoardDetect.boards.vrherov10)
                 {
                     baseurl = temp.urlvrherov10.ToString();
+                }
+                else if (board == BoardDetect.boards.vrubrainv51)
+                {
+                    baseurl = temp.urlvrubrainv51.ToString();
                 }
                 else
                 {
@@ -564,8 +575,6 @@ namespace MissionPlanner.Utilities
         /// <param name="filename"></param>
         public bool UploadPX4(string filename)
         {
-
-
             Uploader up;
             updateProgress(0, "Reading Hex File");
             px4uploader.Firmware fw;
@@ -632,6 +641,9 @@ namespace MissionPlanner.Utilities
                         up.identify();
                         updateProgress(-1, "Identify");
                         log.InfoFormat("Found board type {0} boardrev {1} bl rev {2} fwmax {3} on {4}", up.board_type, up.board_rev, up.bl_rev, up.fw_maxsize, port);
+
+                        up.ProgressEvent += new Uploader.ProgressEventHandler(up_ProgressEvent);
+                        up.LogEvent += new Uploader.LogEventHandler(up_LogEvent);
                     }
                     catch (Exception)
                     {
@@ -641,15 +653,57 @@ namespace MissionPlanner.Utilities
                         continue;
                     }
 
+                    // test if pausing here stops - System.TimeoutException: The write timed out.
+                    System.Threading.Thread.Sleep(500);
+
                     try
                     {
                         up.verifyotp();
                     }
-                    catch { CustomMessageBox.Show("You are using unsupported hardware.\nThis board does not contain a valid certificate of authenticity.\nPlease contact your hardware vendor about signing your hardware.", "Invalid Cert"); up.skipotp = true; }
+                    catch (Org.BouncyCastle.Security.InvalidKeyException ex) 
+                    {
+                        log.Error(ex);
+                        CustomMessageBox.Show("You are using unsupported hardware.\nThis board does not contain a valid certificate of authenticity.\nPlease contact your hardware vendor about signing your hardware.", "Invalid Cert"); 
+                        up.skipotp = true;
+                    }
+                    catch (FormatException ex)
+                    {
+                        log.Error(ex);
+                        CustomMessageBox.Show("You are using unsupported hardware.\nThis board does not contain a valid certificate of authenticity.\nPlease contact your hardware vendor about signing your hardware.", "Invalid Cert");
+                        up.skipotp = true;
+                    }
+                    catch (IOException ex) 
+                    {
+                        log.Error(ex);
+                        CustomMessageBox.Show("lost communication with the board.", "lost comms");
+                        up.close();
+                        return false;
+                    }
+                    catch (TimeoutException ex)
+                    {
+                        log.Error(ex);
+                        CustomMessageBox.Show("lost communication with the board.", "lost comms");
+                        up.close();
+                        return false;
+                    }
+                    catch (Exception ex)
+                    {
+                        log.Error(ex);
+                        CustomMessageBox.Show("lost communication with the board. " + ex.ToString(), "lost comms");
+                        up.close();
+                        return false;
+                    }
 
                     try
                     {
                         up.currentChecksum(fw);
+                    }
+                    catch (IOException ex)
+                    {
+                        log.Error(ex);
+                        CustomMessageBox.Show("lost communication with the board.", "lost comms");
+                        up.close();
+                        return false;
                     }
                     catch
                     {
@@ -661,9 +715,6 @@ namespace MissionPlanner.Utilities
 
                     try
                     {
-                        up.ProgressEvent += new Uploader.ProgressEventHandler(up_ProgressEvent);
-                        up.LogEvent += new Uploader.LogEventHandler(up_LogEvent);
-
                         updateProgress(0, "Upload");
                         up.upload(fw);
                         updateProgress(100, "Upload Done");
@@ -846,7 +897,7 @@ namespace MissionPlanner.Utilities
                 return UploadPX4(filename);
             }
 
-            if (board == BoardDetect.boards.vrbrainv40 || board == BoardDetect.boards.vrbrainv45 || board == BoardDetect.boards.vrbrainv50 || board == BoardDetect.boards.vrbrainv51 || board == BoardDetect.boards.vrherov10)
+            if (board == BoardDetect.boards.vrbrainv40 || board == BoardDetect.boards.vrbrainv45 || board == BoardDetect.boards.vrbrainv50 || board == BoardDetect.boards.vrbrainv51 || board == BoardDetect.boards.vrherov10 || board == BoardDetect.boards.vrubrainv51)
             {
                 return UploadVRBRAIN(filename);
             }

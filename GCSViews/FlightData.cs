@@ -72,6 +72,7 @@ namespace MissionPlanner.GCSViews
         internal static GMapOverlay kmlpolygons;
         internal static GMapOverlay geofence;
         internal static GMapOverlay rallypointoverlay;
+        internal static GMapOverlay poioverlay = new GMapOverlay("POI"); // poi layer
 
         Dictionary<Guid, Form> formguids = new Dictionary<Guid, Form>();
 
@@ -110,12 +111,32 @@ namespace MissionPlanner.GCSViews
         //whether or not the output console has already started
         bool outputwindowstarted = false;
 
+
+        private void deleteToolStripMenuItem_Click(object sender, System.EventArgs e)
+        {
+            POI.POIDelete(CurrentGMapMarker.Position);
+        }
+
+        private void addPoiToolStripMenuItem_Click(object sender, System.EventArgs e)
+        {
+            POI.POIAdd(MouseDownStart);
+        }
+
+        private void saveFileToolStripMenuItem_Click(object sender, System.EventArgs e)
+        {
+            POI.POISave();
+        }
+
+
         protected override void Dispose(bool disposing)
         {
             base.Dispose(disposing);
 
             threadrun = 0;
             MainV2.comPort.logreadmode = false;
+            // this should make the current pending invokes run
+            System.Threading.Thread.Sleep(100);
+            Application.DoEvents();
             try
             {
                 if (hud1 != null)
@@ -247,7 +268,8 @@ namespace MissionPlanner.GCSViews
 
             gMapControl1.DisableFocusOnMouseEnter = true;
 
-            
+            gMapControl1.OnMarkerEnter += gMapControl1_OnMarkerEnter;
+            gMapControl1.OnMarkerLeave += gMapControl1_OnMarkerLeave;
 
             gMapControl1.RoutesEnabled = true;
             gMapControl1.PolygonsEnabled = true;
@@ -267,6 +289,8 @@ namespace MissionPlanner.GCSViews
             rallypointoverlay = new GMapOverlay("rally points");
             gMapControl1.Overlays.Add(rallypointoverlay);
 
+            gMapControl1.Overlays.Add(poioverlay);
+
             try
             {
                 if (MainV2.getConfig("GspeedMAX") != "")
@@ -282,6 +306,18 @@ namespace MissionPlanner.GCSViews
 
             // first run
             MainV2_AdvancedChanged(null, null);
+        }
+
+        internal GMapMarker CurrentGMapMarker;
+
+        void gMapControl1_OnMarkerLeave(GMapMarker item)
+        {
+            CurrentGMapMarker = null;
+        }
+
+        void gMapControl1_OnMarkerEnter(GMapMarker item)
+        {
+            CurrentGMapMarker = item;
         }
    
         void tabStatus_Resize(object sender, EventArgs e)
@@ -566,6 +602,8 @@ namespace MissionPlanner.GCSViews
         {
             System.Threading.ThreadPool.QueueUserWorkItem(mainloop);
 
+            POI.POIModified += POI_POIModified;
+
             TRK_zoom.Minimum = gMapControl1.MapProvider.MinZoom;
             TRK_zoom.Maximum = (float)24;
             TRK_zoom.Value = (float)gMapControl1.Zoom;
@@ -594,6 +632,11 @@ namespace MissionPlanner.GCSViews
             }
 
             hud1.doResize();
+        }
+
+        void POI_POIModified(object sender, EventArgs e)
+        {
+            POI.UpdateOverlay(poioverlay);
         }
 
         private void mainloop(object o)
@@ -973,12 +1016,15 @@ namespace MissionPlanner.GCSViews
                                     rallypointoverlay.Markers.Add(new GMapMarkerRallyPt(mark));
                                 }
 
-                                // airports
-                                foreach (var item in Utilities.Airports.getAirports(gMapControl1.Position))
+                                // optional on Flight data
+                                if (MainV2.ShowAirports)
                                 {
-                                    rallypointoverlay.Markers.Add(new GMapMarkerAirport(item) { ToolTipText = item.Tag, ToolTipMode = MarkerTooltipMode.Always });
+                                    // airports
+                                    foreach (var item in Utilities.Airports.getAirports(gMapControl1.Position))
+                                    {
+                                        rallypointoverlay.Markers.Add(new GMapMarkerAirport(item) { ToolTipText = item.Tag, ToolTipMode = MarkerTooltipMode.OnMouseOver });
+                                    }
                                 }
-
                                 waypoints = DateTime.Now;
                             }
 
@@ -1057,6 +1103,20 @@ namespace MissionPlanner.GCSViews
                             {
                                 routes.Markers.Add(new GMarkerGoogle(currentloc, GMarkerGoogleType.blue_dot) { Position = MainV2.comPort.MAV.cs.MovingBase, ToolTipText = "Moving Base", ToolTipMode = MarkerTooltipMode.OnMouseOver });
                             }
+
+
+                            // for testing
+                            try
+                            {
+                                int testing;
+                                int fixme;
+                                var marker = MissionPlanner.Utilities.GimbalPoint.ProjectPoint();
+
+                                MainV2.comPort.MAV.cs.GimbalPoint = marker;
+
+                                routes.Markers.Add(new GMarkerGoogle(marker, GMarkerGoogleType.blue_dot) { ToolTipText = "Camera Target\n"+marker.ToString(), ToolTipMode = MarkerTooltipMode.OnMouseOver });
+                            }
+                            catch { }
 
                             lock(MainV2.instance.adsbPlanes) 
                             {
@@ -1561,11 +1621,11 @@ namespace MissionPlanner.GCSViews
 
         }
 
-        internal PointLatLng gotolocation = new PointLatLng();
+        internal PointLatLng MouseDownStart = new PointLatLng();
 
         private void gMapControl1_MouseDown(object sender, MouseEventArgs e)
         {
-            gotolocation = gMapControl1.FromLocalToLatLng(e.X, e.Y);
+            MouseDownStart = gMapControl1.FromLocalToLatLng(e.X, e.Y);
 
             if (Control.ModifierKeys == Keys.Control)
             {
@@ -1589,7 +1649,7 @@ namespace MissionPlanner.GCSViews
                     return;
             }
 
-            if (gotolocation.Lat == 0 || gotolocation.Lng == 0)
+            if (MouseDownStart.Lat == 0 || MouseDownStart.Lng == 0)
             {
                 CustomMessageBox.Show("Bad Lat/Long", "Error");
                 return;
@@ -1599,8 +1659,8 @@ namespace MissionPlanner.GCSViews
 
             gotohere.id = (byte)MAVLink.MAV_CMD.WAYPOINT;
             gotohere.alt = (float)(MainV2.comPort.MAV.GuidedMode.z); // back to m
-            gotohere.lat = (gotolocation.Lat);
-            gotohere.lng = (gotolocation.Lng);
+            gotohere.lat = (MouseDownStart.Lat);
+            gotohere.lng = (MouseDownStart.Lng);
 
             try
             {
@@ -1632,8 +1692,8 @@ namespace MissionPlanner.GCSViews
             {
                 PointLatLng point = gMapControl1.FromLocalToLatLng(e.X, e.Y);
 
-                double latdif = gotolocation.Lat - point.Lat;
-                double lngdif = gotolocation.Lng - point.Lng;
+                double latdif = MouseDownStart.Lat - point.Lat;
+                double lngdif = MouseDownStart.Lng - point.Lng;
 
                 try
                 {
@@ -1748,6 +1808,8 @@ namespace MissionPlanner.GCSViews
                     MainV2.comPort.lastlogread = DateTime.MinValue;
 
                     LBL_logfn.Text = Path.GetFileName(file);
+
+                    log.Info("Open logfile " + file);
 
                     tracklog.Value = 0;
                     tracklog.Minimum = 0;
@@ -2500,14 +2562,14 @@ namespace MissionPlanner.GCSViews
                 return;
             }
 
-            if (gotolocation.Lat == 0 || gotolocation.Lng == 0)
+            if (MouseDownStart.Lat == 0 || MouseDownStart.Lng == 0)
             {
                 CustomMessageBox.Show("Bad Lat/Long");
                 return;
             }
 
             MainV2.comPort.setMountConfigure(MAVLink.MAV_MOUNT_MODE.GPS_POINT, true, true, true);
-            MainV2.comPort.setMountControl(gotolocation.Lat, gotolocation.Lng, (int)(intalt / MainV2.comPort.MAV.cs.multiplierdist), true);
+            MainV2.comPort.setMountControl(MouseDownStart.Lat, MouseDownStart.Lng, (int)(intalt / MainV2.comPort.MAV.cs.multiplierdist), true);
 
         }
 
@@ -3098,11 +3160,30 @@ namespace MissionPlanner.GCSViews
         private void BUT_loganalysis_Click(object sender, EventArgs e)
         {
             OpenFileDialog ofd = new OpenFileDialog();
-            ofd.Filter = "*.log|*.log";
+            ofd.Filter = "*.log|*.log|*.bin|*.bin";
             ofd.ShowDialog();
 
             if (ofd.FileName != "")
             {
+                string newlogfile = null;
+
+                if (ofd.FileName.ToLower().EndsWith(".bin"))
+                {
+                    var log = MissionPlanner.Log.BinaryLog.ReadLog(ofd.FileName);
+
+                    newlogfile = Path.GetTempPath() + Path.DirectorySeparatorChar + Path.GetTempFileName() + ".log";
+
+                    using (StreamWriter sw = new StreamWriter(newlogfile))
+                    {
+                        foreach (string line in log)
+                        {
+                            sw.Write(line);
+                        }
+                    }
+
+                    ofd.FileName = newlogfile;
+                }
+
                 string xmlfile = MissionPlanner.Utilities.LogAnalyzer.CheckLogFile(ofd.FileName);
 
                 if (File.Exists(xmlfile))
@@ -3117,7 +3198,13 @@ namespace MissionPlanner.GCSViews
                 {
                     CustomMessageBox.Show("Bad input file");
                 }
+
+                if (newlogfile != "")
+                {
+                    File.Delete(newlogfile);
+                }
             }
         }
+
     }
 }

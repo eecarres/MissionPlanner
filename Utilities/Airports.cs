@@ -28,50 +28,79 @@ namespace MissionPlanner.Utilities
 
         static PointLatLngAlt currentcenter = PointLatLngAlt.Zero;
 
-        // 100km
-        public static int proximity = 100000; 
+        static object locker = new object();
+
+        /// <summary>
+        /// the cache zone radius in m, based on the centerpoint provided
+        /// </summary>
+        public static int proximity = 100000;
+
+        /// <summary>
+        /// used to track is more airports have been loaded, and the cache needs refreshing
+        /// </summary>
+        static bool newairports = false;
+
+        public static bool checkdups = false;
 
         static List<PointLatLngAlt> cache = new List<PointLatLngAlt>();
 
         public static List<PointLatLngAlt> getAirports(PointLatLngAlt centerpoint)
         {
-            log.Info("getAirports " + centerpoint);
-
-            // check if we have moved 66% from our last cache center point
-            if (currentcenter.GetDistance(centerpoint) < ((proximity/3)*2)) 
+            lock (locker)
             {
-                 return cache;
-            }
+                DateTime start = DateTime.Now;
 
-            log.Info("getAirports - regen list");
+                //log.Info("getAirports " + centerpoint);
 
-            // generate a new list
-            currentcenter = centerpoint;
-
-            cache.Clear();
-
-            foreach (PointLatLngAlt item in airports)
-            {
-                if (item.GetDistance(centerpoint) < proximity) 
+                // check if we have moved 66% from our last cache center point
+                if (currentcenter.GetDistance(centerpoint) < ((proximity / 3) * 2))
                 {
-                    cache.Add(item);                
+                    if (!newairports)
+                        return cache;
                 }
-            }
 
-            return cache;
+                newairports = false;
+
+                log.Info("getAirports - regen list");
+
+                // generate a new list
+                currentcenter = centerpoint;
+
+                cache.Clear();
+
+                foreach (PointLatLngAlt item in airports)
+                {
+                    if (item.GetDistance(centerpoint) < proximity)
+                    {
+                        cache.Add(item);
+                    }
+                }
+
+                log.Info("getAirports done " + (DateTime.Now - start).TotalSeconds + " sec");
+
+                return cache;
+            }
         }
 
         public static void AddAirport(PointLatLngAlt plla)
         {
-           // foreach (PointLatLngAlt item in airports)
+            lock (locker)
             {
-              //  if (item.GetDistance(plla) < 200)
+                if (checkdups)
                 {
-              //      return;
+                    foreach (PointLatLngAlt item in airports)
+                    {
+                        if (item.GetDistance(plla) < 1000) // 1000m
+                        {
+                            return;
+                        }
+                    }
                 }
-            }
 
-            airports.Add(plla);
+                airports.Add(plla);
+
+                newairports = true;
+            }
         }
 
         public static void ReadOpenflights(string fn)
@@ -87,6 +116,7 @@ namespace MissionPlanner.Utilities
 
                 try
                 {
+                    
 
                     string name = items[1];
                     int latOffset = 0;
@@ -96,6 +126,10 @@ namespace MissionPlanner.Utilities
                         name = name + "," + items[2 + latOffset];
                     }
                     name = name.Trim('"');
+
+                    if (items[5 + latOffset].Length != 6)
+                        continue;
+
                     double lat = double.Parse(items[6 + latOffset].Trim('"'), CultureInfo.InvariantCulture);
                     double lng = double.Parse(items[7 + latOffset].Trim('"'), CultureInfo.InvariantCulture);
                     double alt = 0;
@@ -105,7 +139,7 @@ namespace MissionPlanner.Utilities
                     var newap = new PointLatLngAlt(lat, lng, alt, name);
 
                     AddAirport(newap);
-                    Console.WriteLine(newap);
+                    //Console.WriteLine(newap);
                 }
                 catch { }
             }
@@ -122,11 +156,17 @@ namespace MissionPlanner.Utilities
                 if (items.Length == 0)
                     continue;
 
-                if (items[0] == "\"id\"")
-                    continue;
-
                 try
                 {
+                    if (items[0] == "\"id\"")
+                        continue;
+
+                    if (items[1].Length != 6) // "xxxx"
+                        continue;
+
+                    if (items[2].Contains("small_airport") || items[2].Contains("heliport") || items[2].Contains("closed"))
+                        continue;
+
 
                     string name = items[3];
                     int latOffset = 0;
@@ -145,7 +185,7 @@ namespace MissionPlanner.Utilities
                     var newap = new PointLatLngAlt(lat, lng, alt, name);
 
                     AddAirport(newap);
-                    Console.WriteLine(newap);
+                    //Console.WriteLine(newap);
                 }
                 catch { }
             }
@@ -178,8 +218,8 @@ namespace MissionPlanner.Utilities
 
                 string name = items[2].Trim('"');
 
-                double lat = double.Parse(items[5]) + double.Parse(items[6]) / 60 + double.Parse(items[7]) / 3600;
-                double lng = double.Parse(items[9]) + double.Parse(items[10]) / 60 + double.Parse(items[11]) / 3600;
+                double lat = double.Parse(items[5], CultureInfo.InvariantCulture) + double.Parse(items[6], CultureInfo.InvariantCulture) / 60 + double.Parse(items[7], CultureInfo.InvariantCulture) / 3600;
+                double lng = double.Parse(items[9], CultureInfo.InvariantCulture) + double.Parse(items[10], CultureInfo.InvariantCulture) / 60 + double.Parse(items[11], CultureInfo.InvariantCulture) / 3600;
 
                 if (items[8] == "S")
                     lat *= -1;
@@ -218,8 +258,8 @@ namespace MissionPlanner.Utilities
                 if (coordssplit.Length != 2)
                     continue;
 
-                double northing = double.Parse(coordssplit[0].Substring(0, 4)) / 100.0;
-                double easting = double.Parse(coordssplit[1].Substring(0, 5)) / 100.0;
+                double northing = double.Parse(coordssplit[0].Substring(0, 4), CultureInfo.InvariantCulture) / 100.0;
+                double easting = double.Parse(coordssplit[1].Substring(0, 5), CultureInfo.InvariantCulture) / 100.0;
 
                 if (coordssplit[0].Contains("S"))
                     northing *= -1;

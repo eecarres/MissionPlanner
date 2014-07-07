@@ -45,12 +45,12 @@ namespace MissionPlanner
             this.MenuSimulation = new System.Windows.Forms.ToolStripButton();
             this.MenuTerminal = new System.Windows.Forms.ToolStripButton();
             this.MenuHelp = new System.Windows.Forms.ToolStripButton();
-            this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
             this.MenuConnect = new System.Windows.Forms.ToolStripButton();
             this.toolStripConnectionControl = new MissionPlanner.Controls.ToolStripConnectionControl();
             this.MenuDonate = new System.Windows.Forms.ToolStripMenuItem();
             this.menu = new MissionPlanner.Controls.MyButton();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.readonlyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.MainMenu.SuspendLayout();
             this.CTX_mainmenu.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -70,7 +70,6 @@ namespace MissionPlanner
             this.MenuSimulation,
             this.MenuTerminal,
             this.MenuHelp,
-            this.toolStripButton1,
             this.MenuConnect,
             this.toolStripConnectionControl,
             this.MenuDonate});
@@ -84,15 +83,14 @@ namespace MissionPlanner
             // 
             this.CTX_mainmenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.autoHideToolStripMenuItem,
-            this.fullScreenToolStripMenuItem});
+            this.fullScreenToolStripMenuItem,
+            this.readonlyToolStripMenuItem});
             this.CTX_mainmenu.Name = "CTX_mainmenu";
             resources.ApplyResources(this.CTX_mainmenu, "CTX_mainmenu");
             // 
             // autoHideToolStripMenuItem
             // 
-            this.autoHideToolStripMenuItem.Checked = true;
             this.autoHideToolStripMenuItem.CheckOnClick = true;
-            this.autoHideToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.autoHideToolStripMenuItem.Name = "autoHideToolStripMenuItem";
             resources.ApplyResources(this.autoHideToolStripMenuItem, "autoHideToolStripMenuItem");
             this.autoHideToolStripMenuItem.Click += new System.EventHandler(this.autoHideToolStripMenuItem_Click);
@@ -164,16 +162,6 @@ namespace MissionPlanner
             this.MenuHelp.Padding = new System.Windows.Forms.Padding(0, 0, 10, 0);
             this.MenuHelp.Click += new System.EventHandler(this.MenuHelp_Click);
             // 
-            // toolStripButton1
-            // 
-            this.toolStripButton1.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-            resources.ApplyResources(this.toolStripButton1, "toolStripButton1");
-            this.toolStripButton1.ForeColor = System.Drawing.Color.White;
-            this.toolStripButton1.Image = global::MissionPlanner.Properties.Resources.HemavButton;
-            this.toolStripButton1.Margin = new System.Windows.Forms.Padding(0);
-            this.toolStripButton1.Name = "toolStripButton1";
-            this.toolStripButton1.Click += new System.EventHandler(this.toolStripButton1_Click);
-            // 
             // MenuConnect
             // 
             this.MenuConnect.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
@@ -218,6 +206,13 @@ namespace MissionPlanner
             this.panel1.Name = "panel1";
             this.panel1.MouseLeave += new System.EventHandler(this.MainMenu_MouseLeave);
             // 
+            // readonlyToolStripMenuItem
+            // 
+            this.readonlyToolStripMenuItem.CheckOnClick = true;
+            this.readonlyToolStripMenuItem.Name = "readonlyToolStripMenuItem";
+            resources.ApplyResources(this.readonlyToolStripMenuItem, "readonlyToolStripMenuItem");
+            this.readonlyToolStripMenuItem.Click += new System.EventHandler(this.readonlyToolStripMenuItem_Click);
+            // 
             // MainV2
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
@@ -227,9 +222,6 @@ namespace MissionPlanner
             this.KeyPreview = true;
             this.MainMenuStrip = this.MainMenu;
             this.Name = "MainV2";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainV2_FormClosing);
-            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.MainV2_FormClosed);
-            this.Load += new System.EventHandler(this.MainV2_Load);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.MainV2_KeyDown);
             this.Resize += new System.EventHandler(this.MainV2_Resize);
             this.MainMenu.ResumeLayout(false);
@@ -260,6 +252,6 @@ namespace MissionPlanner
         private System.Windows.Forms.ToolStripMenuItem MenuDonate;
         public System.Windows.Forms.MenuStrip MainMenu;
         private System.Windows.Forms.ToolStripMenuItem fullScreenToolStripMenuItem;
-        public System.Windows.Forms.ToolStripButton toolStripButton1;
+        private System.Windows.Forms.ToolStripMenuItem readonlyToolStripMenuItem;
     }
 }

@@ -23,6 +23,9 @@ using System.Xml;
 using IronPython.Hosting;
 using IronPython.Runtime.Operations;
 using System.Net.Sockets;
+using DotSpatial.Projections;
+using MissionPlanner.Controls;
+using System.Security;
 
 namespace MissionPlanner
 {
@@ -37,11 +40,11 @@ namespace MissionPlanner
             //if (System.Diagnostics.Debugger.IsAttached) {
             try
             {
-                Controls.OpenGLtest ogl = new Controls.OpenGLtest();
+                //Controls.OpenGLtest ogl = new Controls.OpenGLtest();
 
-                this.Controls.Add(ogl);
+                //this.Controls.Add(ogl);
 
-                ogl.Dock = DockStyle.Fill;
+                //ogl.Dock = DockStyle.Fill;
             }
             catch { }
            // }
@@ -955,7 +958,19 @@ namespace MissionPlanner
 
         private void BUT_magfit_Click(object sender, EventArgs e)
         {
-            MagCalib.ProcessLog(0);
+            OpenFileDialog ofd = new OpenFileDialog();
+            ofd.Filter = "t Log|*.tlog";
+
+            ofd.ShowDialog();
+
+            var com = new Comms.CommsFile();
+            com.Open(ofd.FileName);
+
+            MainV2.comPort.BaseStream = com;
+
+            MagCalib.DoGUIMagCalib(false);
+
+            //MagCalib.ProcessLog(0);
         }
 
         private void but_multimav_Click(object sender, EventArgs e)
@@ -1151,6 +1166,8 @@ namespace MissionPlanner
                         xmlwriter.WriteElementString("urlvrbrainv51", new Uri(software.urlvrbrainv51).LocalPath.TrimStart('/', '\\'));
                     if (software.urlvrherov10 != "")
                         xmlwriter.WriteElementString("urlvrherov10", new Uri(software.urlvrherov10).LocalPath.TrimStart('/', '\\'));
+                    if (software.urlvrubrainv51 != "")
+                        xmlwriter.WriteElementString("urlvrubrainv51", new Uri(software.urlvrubrainv51).LocalPath.TrimStart('/', '\\'));
                     xmlwriter.WriteElementString("name", software.name);
                     xmlwriter.WriteElementString("desc", software.desc);
                     xmlwriter.WriteElementString("format_version", software.k_format_version.ToString());
@@ -1197,6 +1214,10 @@ namespace MissionPlanner
                     {
                         Common.getFilefromNet(software.urlvrherov10, basedir + new Uri(software.urlvrherov10).LocalPath);
                     }
+                    if (software.urlvrubrainv51 != "")
+                    {
+                        Common.getFilefromNet(software.urlvrubrainv51, basedir + new Uri(software.urlvrubrainv51).LocalPath);
+                    }
                 }
 
                 xmlwriter.WriteEndElement();
@@ -1212,11 +1233,11 @@ namespace MissionPlanner
 
             if (ofd.FileName != "")
             {
-                string xmlfile = LogAnalyzer.CheckLogFile(ofd.FileName);
+                string xmlfile = MissionPlanner.Utilities.LogAnalyzer.CheckLogFile(ofd.FileName);
 
                 if (File.Exists(xmlfile))
                 {
-                    var out1 = LogAnalyzer.Results(xmlfile);
+                    var out1 = MissionPlanner.Utilities.LogAnalyzer.Results(xmlfile);
 
                     MissionPlanner.Controls.LogAnalyzer frm = new Controls.LogAnalyzer(out1);
 
@@ -1301,6 +1322,177 @@ namespace MissionPlanner
                    // System.Threading.Thread.Sleep(1);
                 }
             }
+        }
+
+        private void BUT_magfit2_Click(object sender, EventArgs e)
+        {
+            MagCalib.ProcessLog(0);
+        }
+
+        private void BUT_shptopoly_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog fd = new OpenFileDialog();
+            fd.Filter = "Shape file|*.shp";
+            DialogResult result = fd.ShowDialog();
+            string file = fd.FileName;
+
+            ProjectionInfo pStart = new ProjectionInfo();
+            ProjectionInfo pESRIEnd = KnownCoordinateSystems.Geographic.World.WGS1984;
+            bool reproject = false;
+
+            if (File.Exists(file))
+            {
+                string prjfile = Path.GetDirectoryName(file) + Path.DirectorySeparatorChar + Path.GetFileNameWithoutExtension(file) + ".prj";
+                if (File.Exists(prjfile))
+                {
+
+                    using (StreamReader re = File.OpenText(Path.GetDirectoryName(file) + Path.DirectorySeparatorChar + Path.GetFileNameWithoutExtension(file) + ".prj"))
+                    {
+                        pStart.ParseEsriString(re.ReadLine());
+
+                        reproject = true;
+                    }
+                }
+
+                DotSpatial.Data.IFeatureSet fs = DotSpatial.Data.FeatureSet.Open(file);
+
+                fs.FillAttributes();
+
+                int rows = fs.NumRows();
+
+                DataTable dtOriginal = fs.DataTable;
+                for (int row = 0; row < dtOriginal.Rows.Count; row++)
+                {
+                    object[] original = dtOriginal.Rows[row].ItemArray;
+                }
+
+                foreach (DataColumn col in dtOriginal.Columns)
+                {
+                    Console.WriteLine(col.ColumnName + " " + col.DataType.ToString());
+                }
+
+                int a = 1;
+
+                string path = Path.GetDirectoryName(file);
+
+                foreach (var feature in fs.Features)
+                {
+                    StringBuilder sb = new StringBuilder();
+
+                    sb.Append("#Shap to Poly - Mission Planner\r\n");
+                    foreach (var point in feature.Coordinates)
+                    {
+                        if (reproject)
+                        {
+                            double[] xyarray = { point.X, point.Y };
+                            double[] zarray = { point.Z };
+
+                            Reproject.ReprojectPoints(xyarray, zarray, pStart, pESRIEnd, 0, 1);
+
+                            point.X = xyarray[0];
+                            point.Y = xyarray[1];
+                            point.Z = zarray[0];
+                        }
+
+                        sb.Append(point.Y.ToString(System.Globalization.CultureInfo.InvariantCulture) + "\t" + point.X.ToString(System.Globalization.CultureInfo.InvariantCulture) + "\r\n");
+                    }
+
+                    log.Info("writting poly to " + path + Path.DirectorySeparatorChar + "poly-" + a + ".poly");
+                    File.WriteAllText(path + Path.DirectorySeparatorChar + "poly-" + a + ".poly", sb.ToString());
+
+                    a++;
+                }
+            }
+        }
+
+        private void but_droneshare_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog ofd = new OpenFileDialog();
+            ofd.Filter = "tlog|*.tlog|*.log|*.log";
+            ofd.Multiselect = true;
+            ofd.ShowDialog();
+
+            string droneshareusername = MainV2.getConfig("droneshareusername");
+
+            InputBox.Show("Username", "Username", ref droneshareusername);
+
+            MainV2.config["droneshareusername"] = droneshareusername;
+
+            string dronesharepassword = MainV2.getConfig("dronesharepassword");
+
+            if (dronesharepassword != "")
+            {
+                try
+                {
+                    // fail on bad entry
+                    var crypto = new Crypto();
+                    dronesharepassword = crypto.DecryptString(dronesharepassword);
+                }
+                catch { }
+            }
+
+            InputBox.Show("Password", "Password", ref dronesharepassword,true);
+
+            var crypto2 = new Crypto();
+
+            string encryptedpw = crypto2.EncryptString(dronesharepassword);
+
+            MainV2.config["dronesharepassword"] = encryptedpw;            
+
+            if (File.Exists(ofd.FileName)) 
+            {
+                foreach (var file in ofd.FileNames) 
+                {
+                    string viewurl = Utilities.droneshare.doUpload(file, droneshareusername, dronesharepassword, Guid.NewGuid().ToString(), Utilities.droneshare.APIConstants.apiKey);
+
+                    if (viewurl != "")
+                        System.Diagnostics.Process.Start(viewurl);
+                }
+            }
+
+            dronesharepassword = null;
+        }
+
+        String SecureStringToString(SecureString value)
+        {
+            IntPtr valuePtr = IntPtr.Zero;
+            try
+            {
+                valuePtr = Marshal.SecureStringToGlobalAllocUnicode(value);
+                return Marshal.PtrToStringUni(valuePtr);
+            }
+            finally
+            {
+                Marshal.ZeroFreeGlobalAllocUnicode(valuePtr);
+            }
+        }
+
+        private void but_gimbaltest_Click(object sender, EventArgs e)
+        {
+            var answer = GimbalPoint.ProjectPoint();
+        }
+
+        private void but_mntstatus_Click(object sender, EventArgs e)
+        {
+            MainV2.comPort.GetMountStatus();
+        }
+
+        private void but_maplogs_Click(object sender, EventArgs e)
+        {
+            FolderBrowserDialog fbd = new FolderBrowserDialog();
+            fbd.SelectedPath = MainV2.LogDir;
+
+            if (fbd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                Log.LogMap.MapLogs(Directory.GetFiles(fbd.SelectedPath, "*.tlog", SearchOption.AllDirectories));
+            }
+        }
+
+        private void butlogindex_Click(object sender, EventArgs e)
+        {
+            Log.LogIndex form = new Log.LogIndex();
+
+            form.Show();
         }
     }
 }

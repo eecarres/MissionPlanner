@@ -48,6 +48,8 @@ namespace MissionPlanner
             System.Windows.Forms.Application.SetCompatibleTextRenderingDefault(false);
 
             ServicePointManager.DefaultConnectionLimit = 10;
+            ServicePointManager.Expect100Continue = true;
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Ssl3;
 
             System.Windows.Forms.Application.ThreadException += Application_ThreadException;
 
@@ -75,6 +77,7 @@ namespace MissionPlanner
             GMap.NET.MapProviders.GMapProviders.List.Add(Maps.WMSProvider.Instance);
             GMap.NET.MapProviders.GMapProviders.List.Add(Maps.Custom.Instance);
             GMap.NET.MapProviders.GMapProviders.List.Add(Maps.Earthbuilder.Instance);
+            GMap.NET.MapProviders.GMapProviders.List.Add(Maps.MapBox.Instance);
 
             // add proxy settings
             GMap.NET.MapProviders.GMapProvider.WebProxy = WebRequest.GetSystemWebProxy();
