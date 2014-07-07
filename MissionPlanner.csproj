@@ -133,10 +133,6 @@
     <Reference Include="alglibnet2">
       <HintPath>ExtLibs\alglibnet2.dll</HintPath>
     </Reference>
-    <Reference Include="BouncyCastle.Crypto, Version=1.7.4137.9688, Culture=neutral, PublicKeyToken=a4292a325f69b123, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>packages\BouncyCastle.1.7.0\lib\Net20\BouncyCastle.Crypto.dll</HintPath>
-    </Reference>
     <Reference Include="BouncyCastle.Crypto, Version=1.7.4114.6375, Culture=neutral, PublicKeyToken=0e99375e54769942">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\..\..\Program Files (x86)\Mission Planner\BouncyCastle.Crypto.dll</HintPath>
@@ -213,7 +209,7 @@
       <HintPath>extLibs\netDxf.dll</HintPath>
     </Reference>
     <Reference Include="ObjectListView">
-      <HintPath>packages\Unofficial.ObjectListView.2.6.0\lib\net20\ObjectListView.dll</HintPath>
+      <HintPath>ExtLibs\ObjectListView.dll</HintPath>
     </Reference>
     <Reference Include="OpenTK, Version=1.1.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -226,9 +222,6 @@
     <Reference Include="ProjNet, Version=1.2.4455.27045, Culture=neutral, PublicKeyToken=a1f5bdcd9c6f5740, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\..\..\Program Files (x86)\Mission Planner\ProjNet.dll</HintPath>
-    </Reference>
-    <Reference Include="protobuf-net">
-      <HintPath>packages\protobuf-net.2.0.0.668\lib\net40\protobuf-net.dll</HintPath>
     </Reference>
     <Reference Include="System">
       <Private>False</Private>
