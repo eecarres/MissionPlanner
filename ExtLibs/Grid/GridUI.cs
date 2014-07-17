@@ -914,11 +914,6 @@ namespace MissionPlanner
                 tabControl1.TabPages.Remove(tabTrigger);
             }
         }
-
-        private void CHK_toandland_CheckedChanged(object sender, EventArgs e)
-        {
-
-        }
     }
 }
 

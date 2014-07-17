@@ -1282,6 +1282,11 @@ Please check the following
             return doCommand(MAV_CMD.COMPONENT_ARM_DISARM, armit ? 1 : 0, 0, 0, 0, 0, 0, 0);
         }
 
+        public bool doMotorTest(int motor, MAVLink.MOTOR_TEST_THROTTLE_TYPE thr_type, int throttle, int timeout)
+        {
+            return MainV2.comPort.doCommand(MAVLink.MAV_CMD.DO_MOTOR_TEST, (float)motor, (float)(byte)thr_type, (float)throttle, (float)timeout, 0, 0, 0);
+        }
+
         public bool doCommand(MAV_CMD actionid, float p1, float p2, float p3, float p4, float p5, float p6, float p7)
         {
 
@@ -3230,6 +3235,21 @@ Please check the following
             }
 
             return false;
+        }
+
+        public enum sensoroffsetsenum
+        {
+            gyro = 0,
+            accelerometer=1,
+            magnetometer=2,
+            barometer=3,
+            optical_flow=4,
+            second_magnetometer=5
+        }
+
+        public bool SetSensorOffsets(sensoroffsetsenum sensor, float x, float y, float z)
+        {
+            return doCommand(MAV_CMD.PREFLIGHT_SET_SENSOR_OFFSETS,(int)sensor,x,y,z,0,0,0);
         }
 
         byte[] readlogPacket()

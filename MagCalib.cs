@@ -24,6 +24,7 @@ namespace MissionPlanner
         const float deg2rad = (float)(1.0 / rad2deg);
 
         static double[] ans;
+        static double[] ans2;
         
         static float com2ofsx;
         static float com2ofsy; 
@@ -91,6 +92,9 @@ namespace MissionPlanner
 
             if (ans != null)
                 MagCalib.SaveOffsets(ans);
+
+            if (ans2 != null)
+                MagCalib.SaveOffsets2(ans2);
         }
 
         // filter data points to only x number per quadrant
@@ -184,10 +188,20 @@ namespace MissionPlanner
             // turn learning off
             MainV2.comPort.setParam("COMPASS_LEARN", 0);
 
+            bool havecompass2 = false;
+
             //compass2 get mag2 offsets
-            float com2ofsx = MainV2.comPort.GetParam("COMPASS_OFS2_X");
-            float com2ofsy = MainV2.comPort.GetParam("COMPASS_OFS2_Y");
-            float com2ofsz = MainV2.comPort.GetParam("COMPASS_OFS2_Z");
+            float com2ofsx = 0;
+            float com2ofsy = 0;
+            float com2ofsz = 0;
+            if (MainV2.comPort.MAV.param.ContainsKey("COMPASS_OFS2_X"))
+            {
+                com2ofsx = MainV2.comPort.GetParam("COMPASS_OFS2_X");
+                com2ofsy = MainV2.comPort.GetParam("COMPASS_OFS2_Y");
+                com2ofsz = MainV2.comPort.GetParam("COMPASS_OFS2_Z");
+
+                havecompass2 = true;
+            }
             
             // old method
             float minx = 0;
@@ -248,10 +262,6 @@ namespace MissionPlanner
                 float rawmy = datacompass1[datacompass1.Count - 1].Item2;
                 float rawmz = datacompass1[datacompass1.Count - 1].Item3;
 
-                float raw2mx = datacompass2[datacompass2.Count - 1].Item1;
-                float raw2my = datacompass2[datacompass2.Count - 1].Item2;
-                float raw2mz = datacompass2[datacompass2.Count - 1].Item3;
-
                 // for old method
                 setMinorMax(rawmx, ref minx, ref maxx);
                 setMinorMax(rawmy, ref miny, ref maxy);
@@ -303,9 +313,15 @@ namespace MissionPlanner
                 ((ProgressReporterSphere)sender).sphere1.AddPoint(new OpenTK.Vector3(rawmx, rawmy, rawmz));
                 ((ProgressReporterSphere)sender).sphere1.AimClear();
 
-                ((ProgressReporterSphere)sender).sphere2.AddPoint(new OpenTK.Vector3(raw2mx, raw2my, raw2mz));
-                ((ProgressReporterSphere)sender).sphere2.AimClear();
+                if (havecompass2 && datacompass2.Count > 0)
+                {
+                    float raw2mx = datacompass2[datacompass2.Count - 1].Item1;
+                    float raw2my = datacompass2[datacompass2.Count - 1].Item2;
+                    float raw2mz = datacompass2[datacompass2.Count - 1].Item3;
 
+                    ((ProgressReporterSphere)sender).sphere2.AddPoint(new OpenTK.Vector3(raw2mx, raw2my, raw2mz));
+                    ((ProgressReporterSphere)sender).sphere2.AimClear();
+                }
 
                 //find the mean radius                    
                 float radius = 0;
@@ -332,8 +348,6 @@ namespace MissionPlanner
                             (float)(Math.Sin(theta) * Math.Cos(phi) * radius),
                             (float)(Math.Sin(theta) * Math.Sin(phi) * radius),
                             (float)(Math.Cos(theta) * radius)) - centre;
-
-                        
 
                         //log.DebugFormat("magcalib check - {0} {1} dist {2}", theta * rad2deg, phi * rad2deg, max_distance);
 
@@ -367,6 +381,7 @@ namespace MissionPlanner
             {
                 e.ErrorMessage = "Bad compass raw values. Check for magnetic interferance.";
                 ans = null;
+                ans2 = null;
                 return;
             }
 
@@ -381,18 +396,23 @@ namespace MissionPlanner
                     e.CancelAcknowledged = true;
                     e.CancelRequested = true;
                     ans = null;
+                    ans2 = null;
                     return;
                 }
             }
 
             // remove outlyers
             RemoveOutliers(ref datacompass1);
-            RemoveOutliers(ref datacompass2);
+            if (havecompass2 && datacompass2.Count > 0)
+            {
+                RemoveOutliers(ref datacompass2);
+            }
 
             if (datacompass1.Count < 10)
             {
                 e.ErrorMessage = "Log does not contain enough data";
                 ans = null;
+                ans2 = null;
                 return;
             }
 
@@ -403,9 +423,14 @@ namespace MissionPlanner
                 ellipsoid = true;
             }
 
+            log.Info("Compass 1");
             ans = MagCalib.LeastSq(datacompass1, ellipsoid);
 
-            double[] ans2 = MagCalib.LeastSq(datacompass2, ellipsoid);
+            if (havecompass2 && datacompass2.Count > 0)
+            {
+                log.Info("Compass 2");
+                ans2 = MagCalib.LeastSq(datacompass2, ellipsoid);
+            }
         }
 
         static void RemoveOutliers(ref List<Tuple<float, float, float>> data)
@@ -773,10 +798,15 @@ namespace MissionPlanner
                 {
                     // disable learning
                     MainV2.comPort.setParam("COMPASS_LEARN", 0);
-                    // set values
-                    MainV2.comPort.setParam("COMPASS_OFS_X", (float)ofs[0]);
-                    MainV2.comPort.setParam("COMPASS_OFS_Y", (float)ofs[1]);
-                    MainV2.comPort.setParam("COMPASS_OFS_Z", (float)ofs[2]);
+
+                    if (!MainV2.comPort.SetSensorOffsets(MAVLinkInterface.sensoroffsetsenum.magnetometer, (float)ofs[0], (float)ofs[1], (float)ofs[2]))
+                    {
+                        // set values
+                        MainV2.comPort.setParam("COMPASS_OFS_X", (float)ofs[0]);
+                        MainV2.comPort.setParam("COMPASS_OFS_Y", (float)ofs[1]);
+                        MainV2.comPort.setParam("COMPASS_OFS_Z", (float)ofs[2]);
+                    }
+
                     if (ofs.Length > 3)
                     {
                         // ellipsoid
@@ -793,6 +823,41 @@ namespace MissionPlanner
             else
             {
                 CustomMessageBox.Show("New offsets are " + ofs[0].ToString("0") + " " + ofs[1].ToString("0") + " " + ofs[2].ToString("0") + "\n\nPlease write these down for manual entry", "New Mag Offsets");
+            }
+        }
+
+        public static void SaveOffsets2(double[] ofs)
+        {
+            if (MainV2.comPort.MAV.param.ContainsKey("COMPASS_OFS2_X") && MainV2.comPort.BaseStream.IsOpen)
+            {
+                try
+                {
+                    // disable learning
+                    MainV2.comPort.setParam("COMPASS_LEARN", 0);
+
+                    if (!MainV2.comPort.SetSensorOffsets(MAVLinkInterface.sensoroffsetsenum.second_magnetometer, (float)ofs[0], (float)ofs[1], (float)ofs[2]))
+                    {
+                        // set values
+                        MainV2.comPort.setParam("COMPASS_OFS2_X", (float)ofs[0]);
+                        MainV2.comPort.setParam("COMPASS_OFS2_Y", (float)ofs[1]);
+                        MainV2.comPort.setParam("COMPASS_OFS2_Z", (float)ofs[2]);
+                    }
+                    if (ofs.Length > 3)
+                    {
+                        // ellipsoid
+                    }
+                }
+                catch
+                {
+                    CustomMessageBox.Show("Set Compass2 offset failed");
+                    return;
+                }
+
+                CustomMessageBox.Show("New compass2 offsets are " + ofs[0].ToString("0") + " " + ofs[1].ToString("0") + " " + ofs[2].ToString("0") + "\nThese have been saved for you.", "New Mag Offsets");
+            }
+            else
+            {
+                CustomMessageBox.Show("New compass2 offsets are " + ofs[0].ToString("0") + " " + ofs[1].ToString("0") + " " + ofs[2].ToString("0") + "\n\nPlease write these down for manual entry", "New Mag Offsets");
             }
         }
         /// <summary>

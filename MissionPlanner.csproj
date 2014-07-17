@@ -14,23 +14,24 @@
     <TargetFrameworkProfile>
     </TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
-    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <IsWebBootstrapper>true</IsWebBootstrapper>
     <PublishUrl>C:\publish\MissionPlanner\</PublishUrl>
     <Install>true</Install>
-    <InstallFrom>Disk</InstallFrom>
-    <UpdateEnabled>false</UpdateEnabled>
+    <InstallFrom>Web</InstallFrom>
+    <UpdateEnabled>true</UpdateEnabled>
     <UpdateMode>Foreground</UpdateMode>
     <UpdateInterval>7</UpdateInterval>
     <UpdateIntervalUnits>Days</UpdateIntervalUnits>
     <UpdatePeriodically>true</UpdatePeriodically>
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>false</MapFileExtensions>
+    <InstallUrl>http://firmware.diydrones.com/MissionPlanner/upgrade/</InstallUrl>
     <UpdateUrl>http://firmware.diydrones.com/MissionPlanner/upgrade/</UpdateUrl>
     <TargetCulture>en-US</TargetCulture>
     <ProductName>MissionPlanner</ProductName>
     <PublisherName>Michael Oborne</PublisherName>
+    <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
     <WebPage>index.htm</WebPage>
-    <AutorunEnabled>true</AutorunEnabled>
     <ApplicationRevision>5</ApplicationRevision>
     <ApplicationVersion>0.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
@@ -111,7 +112,7 @@
     <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>HemavICON.ico</ApplicationIcon>
+    <ApplicationIcon>mpdesktop.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup />
   <PropertyGroup />
@@ -133,9 +134,9 @@
     <Reference Include="alglibnet2">
       <HintPath>ExtLibs\alglibnet2.dll</HintPath>
     </Reference>
-    <Reference Include="BouncyCastle.Crypto, Version=1.7.4114.6375, Culture=neutral, PublicKeyToken=0e99375e54769942">
+    <Reference Include="BouncyCastle.Crypto, Version=1.7.4137.9688, Culture=neutral, PublicKeyToken=a4292a325f69b123, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\..\Program Files (x86)\Mission Planner\BouncyCastle.Crypto.dll</HintPath>
+      <HintPath>packages\BouncyCastle.1.7.0\lib\Net20\BouncyCastle.Crypto.dll</HintPath>
     </Reference>
     <Reference Include="csmatio, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -165,9 +166,8 @@
     <Reference Include="ICSharpCode.SharpZipLib">
       <HintPath>packages\SharpZipLib.0.86.0\lib\20\ICSharpCode.SharpZipLib.dll</HintPath>
     </Reference>
-    <Reference Include="Ionic.Zip.Reduced, Version=1.9.1.5, Culture=neutral, PublicKeyToken=edbe51ad942a3f5c, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\..\Program Files (x86)\Mission Planner\Ionic.Zip.Reduced.dll</HintPath>
+    <Reference Include="Ionic.Zip">
+      <HintPath>packages\DotNetZip.1.9.2\lib\net20\Ionic.Zip.dll</HintPath>
     </Reference>
     <Reference Include="IronPython, Version=2.7.0.40, Culture=neutral, PublicKeyToken=7f709c5b713576e1, processorArchitecture=MSIL">
       <HintPath>packages\IronPython.2.7.5-beta1\lib\Net40\IronPython.dll</HintPath>
@@ -209,7 +209,7 @@
       <HintPath>extLibs\netDxf.dll</HintPath>
     </Reference>
     <Reference Include="ObjectListView">
-      <HintPath>ExtLibs\ObjectListView.dll</HintPath>
+      <HintPath>packages\Unofficial.ObjectListView.2.6.0\lib\net20\ObjectListView.dll</HintPath>
     </Reference>
     <Reference Include="OpenTK, Version=1.1.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -221,7 +221,10 @@
     </Reference>
     <Reference Include="ProjNet, Version=1.2.4455.27045, Culture=neutral, PublicKeyToken=a1f5bdcd9c6f5740, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\..\Program Files (x86)\Mission Planner\ProjNet.dll</HintPath>
+      <HintPath>packages\ProjNet.1.2\lib\net20\ProjNet.dll</HintPath>
+    </Reference>
+    <Reference Include="protobuf-net">
+      <HintPath>packages\protobuf-net.2.0.0.668\lib\net40\protobuf-net.dll</HintPath>
     </Reference>
     <Reference Include="System">
       <Private>False</Private>
@@ -272,12 +275,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AcercaDe.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="AcercaDe.Designer.cs">
-      <DependentUpon>AcercaDe.cs</DependentUpon>
-    </Compile>
     <Compile Include="Antenna\ArduTracker.cs" />
     <Compile Include="Antenna\DegreeTracker.cs" />
     <Compile Include="Antenna\ITrackerOutput.cs" />
@@ -553,9 +550,6 @@
     <Compile Include="Utilities\ParameterMetaDataRepositoryAutoTest.cs" />
     <Compile Include="Utilities\Firmware.cs" />
     <Compile Include="Utilities\ImageOverFilter.cs" />
-    <EmbeddedResource Include="AcercaDe.resx">
-      <DependentUpon>AcercaDe.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Controls\LogAnalyzer.resx">
       <DependentUpon>LogAnalyzer.cs</DependentUpon>
     </EmbeddedResource>
@@ -2437,7 +2431,6 @@
     <Content Include="FirmwareHistory.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="HemavICON.ico" />
     <Content Include="hud.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <SubType>Designer</SubType>
@@ -5915,7 +5908,6 @@
     <None Include="Resources\calibration06.jpg" />
     <None Include="Resources\calibration07.jpg" />
     <None Include="Resources\FW icons Y6.png" />
-    <None Include="Resources\BtnHemavBlanco.png" />
     <Content Include="Resources\guagebg.jpg" />
     <None Include="Resources\Hframe.png" />
     <None Include="Resources\Hframelight.png" />
@@ -5935,7 +5927,6 @@
     <None Include="Resources\marker_05.png" />
     <None Include="Resources\marker_06.png" />
     <None Include="Resources\marker_07.png" />
-    <None Include="Resources\IconoHemav.jpg" />
     <Content Include="Resources\MAVCmd.zh-TW.txt" />
     <Content Include="Resources\MAVParam.zh-TW.txt" />
     <Content Include="Resources\new frames-01.png" />
@@ -5950,7 +5941,6 @@
     <None Include="Resources\pixhawk.jpg" />
     <Content Include="Resources\rover.png" />
     <Content Include="Resources\splash.jpg" />
-    <None Include="Resources\splashHemav.jpeg" />
     <Content Include="Scripts\datetime.py">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -6060,7 +6050,7 @@
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.0">
       <Visible>False</Visible>
-      <ProductName>Microsoft .NET Framework 4 %28x86 y x64%29</ProductName>
+      <ProductName>Microsoft .NET Framework 4 %28x86 and x64%29</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
@@ -6150,8 +6140,7 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>
-    </PostBuildEvent>
+    <PostBuildEvent>"$(TargetDir)version.exe" "$(TargetPath)" &gt; "$(TargetDir)version.txt"</PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
     <PreBuildEvent>
